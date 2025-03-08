@@ -19,21 +19,36 @@ const Login = () => {
     navigate("/forgetpassword");
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (!storedUser || storedUser.username !== username || storedUser.password !== password) {
-      setErrors({ general: "Invalid username or password" });
-      return;
+  
+    try {
+      const response = await fetch('http://localhost:3000/user/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        // Assuming the server sends a token or success status
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("loggedInUser", username);
+        navigate("/dashboard");
+      } else {
+        // Handle login failure (e.g., wrong username/password)
+        setErrors({ general: data.message || "Invalid username or password" });
+      }
+    } catch (error) {
+      setErrors({ general: "An error occurred. Please try again." });
+      console.error("Login error:", error);
     }
-
-    localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("loggedInUser", username);
-    navigate("/dashboard");
   };
-
+  
   const handleSignupNavigate = () => {
     navigate("/signup");
   };

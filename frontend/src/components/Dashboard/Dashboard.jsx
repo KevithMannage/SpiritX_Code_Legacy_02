@@ -3,16 +3,17 @@ import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [username, setUsername] = useState("");
+  const [selectedTab, setSelectedTab] = useState("profile");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const loggedInUser = localStorage.getItem("loggedInUser");
-    if (!loggedInUser) {
-      navigate("/");
-    } else {
-      setUsername(loggedInUser);
-    }
-  }, [navigate]);
+  // useEffect(() => {
+  //   const loggedInUser = localStorage.getItem("loggedInUser");
+  //   if (!loggedInUser) {
+  //     navigate("/"); // Redirect to login if no user
+  //   } else {
+  //     setUsername(loggedInUser);
+  //   }
+  // }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
@@ -20,17 +21,58 @@ const Dashboard = () => {
     navigate("/login");
   };
 
+  // Function to handle the tab switching logic
+  const handleTabChange = (tab) => {
+    setSelectedTab(tab);
+    if (tab === "player") {
+      navigate("/player"); // Optionally redirect to the player page
+    }
+  };
+
   return (
-    <section className="bg-gray-50 dark:bg-gray-900 h-screen flex items-center justify-center">
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+    <section className="bg-gray-50 dark:bg-gray-900 h-screen flex flex-col">
+      {/* Header Section */}
+      <header className="bg-gray-800 text-white p-4 flex justify-between items-center">
+        <div className="text-2xl font-bold">Dashboard</div>
+        <div className="flex space-x-4">
+          {/* Player Tab */}
+          <button
+            onClick={() => handleTabChange("player")}
+            className={`px-4 py-2 rounded-md ${selectedTab === "player" ? "bg-blue-500 text-white" : "bg-gray-700 text-gray-300"}`}
+          >
+            Player
+          </button>
+          {/* Logout Button */}
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 rounded-md bg-red-600 hover:bg-red-700 text-white"
+          >
+            Logout
+          </button>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="flex-1 flex items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-lg xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-8 space-y-6 md:space-y-8 sm:p-10">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Hello, {username}!
             </h1>
-            <button onClick={handleLogout} className="w-full text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 cursor-pointer">
-              Logout
-            </button>
+
+            {/* Render Content Based on Tab */}
+            {selectedTab === "player" && (
+              <div className="text-center">
+                <h2 className="text-xl font-semibold">Player Information</h2>
+                <p>Here you can display player-related details or statistics.</p>
+                {/* Add additional player-specific content here */}
+              </div>
+            )}
+            {selectedTab === "profile" && (
+              <div className="text-center">
+                <p>Profile content goes here.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
