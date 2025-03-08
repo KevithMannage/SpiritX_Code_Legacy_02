@@ -1,5 +1,23 @@
 import connectDB from '../Config/db.js';
 
+export const getPlayersByCategory = async (category) => {
+    try {
+      // SQL query to get players by category
+      const query = 'SELECT * FROM player WHERE Category = ?';
+      
+      // Execute the query with the provided category
+      const [rows] = await connectDB.execute(query, [category]);
+  
+      // Return the fetched players data
+      return rows;
+    } catch (err) {
+      // If any error occurs, log it and return a message
+      console.error('Error fetching players:', err);
+      throw new Error('Could not fetch players');
+    }
+  };
+
+
 export const getPlayers = async () => {
     try {
         // Query to select all players from the players table

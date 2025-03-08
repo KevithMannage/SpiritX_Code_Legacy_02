@@ -4,7 +4,10 @@ import dotenv from 'dotenv';
 import adminRoutes from './routes/adminRoutes.js';
 import { Server } from 'socket.io';
 import http from 'http';
-
+import teamroutes from "./Routes/teamroute.js";
+import userroutes from "./Routes/useroute.js";
+import playerroutes from "./Routes/playeroute.js";
+// Load environment variables
 dotenv.config();
 
 const app = express();
@@ -14,14 +17,22 @@ const io = new Server(server, { cors: { origin: 'http://localhost:5173' } }); //
 app.use(cors());
 app.use(express.json());
 
+// Mount admin routes
 app.use('/api/players', adminRoutes);
-app.set('socketio', io); // Make io available
+app.use("/user", userroutes);
+app.use("/player", playerroutes);
+app.use("/team",teamroutes);
 
-// Test WebSocket event
+// Socket.IO connection
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);
-  socket.on('disconnect', () => console.log('Client disconnected:', socket.id));
+  socket.on('disconnect', () => {
+    console.log('Client disconnected:', socket.id);
+  });
 });
+
+// Make io accessible in routes/controllers
+app.set('socketio', io);
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {

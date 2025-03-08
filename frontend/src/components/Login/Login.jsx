@@ -33,8 +33,10 @@ const Login = () => {
       });
   
       const data = await response.json();
+
+     // localStorage.setItem("accessToken", JSON.stringify(data.accessToken));
   
-      if (response.ok) {
+      if (response.ok &&!response.Is_admin) {
         // Assuming the server sends a token or success status
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("loggedInUser", username);
@@ -44,11 +46,11 @@ const Login = () => {
         setErrors({ general: data.message || "Invalid username or password" });
       }
     } catch (error) {
-      setErrors({ general: "An error occurred. Please try again." });
+      setErrors({ general: "Invalid username or password" });
       console.error("Login error:", error);
     }
   };
-  
+
   const handleSignupNavigate = () => {
     navigate("/signup");
   };

@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { getUserByEmailAndPassword } from '../Models/User.js';
-import { getUserByEmail } from '../Models/User.js';
+import { getUserByUsername } from '../Models/User.js';
 
 import jwt from 'jsonwebtoken'; // Import jsonwebtoken
 dotenv.config();
@@ -71,34 +71,34 @@ export const loginUser = async (req, res) => {
 
   try {
     // Retrieve the user from the database based on username
-    const user = await getUserByEmail(username);
+    console.log(username);
+    const user = await getUserByUsername(username);
     console.log('User from database:', user);
-    if (user) {
-      console.log('User from database:', user);
 
+    if (user.Password===password) {
       // Compare the provided password with the hashed password in the database
-      const isPasswordValid = await bcrypt.compare(password, user.password);
+     // const isPasswordValid = await bcrypt.compare(password, user.Password);
 
-      if (isPasswordValid) {
-        // Passwords match, generate the JWT access token
-        const accessToken = jwt.sign(
-          { username: user.username },
-          process.env.JWT_SECRET_KEY,
-          { expiresIn: '12h' }
-        );
+      // if (isPasswordValid) {
+      //   // Passwords match, generate the JWT access token
+      //   const accessToken = jwt.sign(
+      //     { username: user.Username },
+      //     process.env.JWT_SECRET_KEY,
+      //     { expiresIn: '12h' }
+      //   );
 
-        // Generate the refresh token with 30 days expiration
-        const refreshToken = jwt.sign(
-          { username: user.username },
-          process.env.JWT_REFRESH_SECRET_KEY, 
-          { expiresIn: '30d' }
-        );
+      //   // Generate the refresh token with 30 days expiration
+      //   const refreshToken = jwt.sign(
+      //     { username: user.Username },
+      //     process.env.JWT_REFRESH_SECRET_KEY,
+      //     { expiresIn: '30d' }
+      //   );
 
-        res.status(200).json({ user, accessToken, refreshToken });
-      } else {
-        // Invalid password
-        res.status(401).send('Invalid username or password');
-      }
+        res.status(200).json({ user });
+      // } else {
+      //   // Invalid password
+      //   res.status(401).send('Invalid username or password');
+      // }
     } else {
       // User not found
       res.status(401).send('Invalid username or password');

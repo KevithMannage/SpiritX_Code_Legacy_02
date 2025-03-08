@@ -33,14 +33,15 @@ export const execute = async (query, params) => {
   try {
     connection = await pool.getConnection();
     const [rows] = await connection.execute(query, params);
-    return rows;
+    return rows; // Ensure this returns an array
   } catch (err) {
     console.error('Error executing query:', err);
-    throw err; // Re-throw the error for handling in the calling function
+    throw err;
   } finally {
-    if (connection) connection.release(); // Always release the connection
+    if (connection) connection.release();
   }
 };
+
 
 // Export the pool for advanced use cases (optional)
 export default pool;
