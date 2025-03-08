@@ -1,4 +1,4 @@
-import connectDB from '../config/db.js';
+import connectDB from '../Config/db.js';
 
 export const createUser = async (username, password) => {
   const query = 'INSERT INTO users (username, password) VALUES (?, ?)';
