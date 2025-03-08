@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import adminRoutes from './routes/adminRoutes.js';
 import { Server } from 'socket.io';
 import http from 'http';
-
+import AdminController from './Controllers/adminController.js';
 // Load environment variables
 dotenv.config();
 
@@ -17,6 +17,7 @@ app.use(express.json());
 
 // Mount admin routes
 app.use('/api/players', adminRoutes);
+AdminController.startRealTimeUpdates(io);
 
 // Socket.IO connection
 io.on('connection', (socket) => {

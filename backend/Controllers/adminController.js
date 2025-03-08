@@ -60,6 +60,42 @@ class AdminController {
       res.status(500).json({ error: 'Internal server error' });
     }
   }
+  static async getTopPerformers(req, res){
+    try {
+      const topRunScorers = await PlayerModel.getTopRunScorers();
+      const topWicketTakers = await PlayerModel.getTopWicketTakers();
+      const totalRunsAndWickets=await PlayerModel.getTotalRunsAndWickets()
+      
+      const responseData = {
+        success: true,
+        data: {
+          topRunScorers,
+          topWicketTakers,
+          totalRunsAndWickets
+        }
+      };
+  
+      // Get Socket.IO instance from app
+      const io = req.app.get('socketio');
+      
+      // Emit the top performers data to all connected clients
+      io.emit('topPerformersUpdated', responseData.data);
+  
+      // Send response to the requesting client
+      res.json(responseData);
+    } catch (error) {
+      console.error('Error fetching top performers:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Error fetching top performers',
+        error: error.message
+      });
+    }
+  }
+  static startRealTimeUpdates(io) {
+    PlayerModel.checkForUpdates(io);
+  }
+  
 }
 
 export default AdminController;
