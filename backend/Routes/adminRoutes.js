@@ -7,5 +7,5 @@ router.get('/', AdminController.getAllPlayers);        // GET /api/players
 router.post('/', AdminController.createPlayer);        // POST /api/players
 router.put('/:id', AdminController.updatePlayer);      // PUT /api/players/:id
 router.delete('/:id', AdminController.deletePlayer);   // DELETE /api/players/:id
-
+router.get('/top', AdminController.getTopPerformers);   //GET /api/players/top
 export default router;

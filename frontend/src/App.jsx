@@ -5,7 +5,6 @@ import Dashboard from './components/Dashboard/Dashboard'
 import FogetPassword from './components/FogetPassword/FogetPassword'
 import Player  from './components/Players/Player'
 import TeamPage from './components/teams/team'
-import Leaderboard from './components/Dashboard/leaderboard'
 function App() {
   return (
     <Router>
@@ -16,7 +15,6 @@ function App() {
         <Route path="/forgetpassword" element={<FogetPassword />} />
         <Route path="/player" element={<Player />} />
         <Route path="/team" element={<TeamPage />} />
-        <Route path="/leaderboard" element={<Leaderboard/>}/>
       </Routes>
     </Router>
   )
