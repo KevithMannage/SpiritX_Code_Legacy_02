@@ -9,7 +9,7 @@ const Dashboard = () => {
   // useEffect(() => {
   //   const loggedInUser = localStorage.getItem("loggedInUser");
   //   if (!loggedInUser) {
-  //     navigate("/");
+  //     navigate("/"); // Redirect to login if no user
   //   } else {
   //     setUsername(loggedInUser);
   //   }
@@ -21,6 +21,14 @@ const Dashboard = () => {
     navigate("/login");
   };
 
+  // Function to handle the tab switching logic
+  const handleTabChange = (tab) => {
+    setSelectedTab(tab);
+    if (tab === "player") {
+      navigate("/player"); // Optionally redirect to the player page
+    }
+  };
+
   return (
     <section className="bg-gray-50 dark:bg-gray-900 h-screen flex flex-col">
       {/* Header Section */}
@@ -29,7 +37,7 @@ const Dashboard = () => {
         <div className="flex space-x-4">
           {/* Player Tab */}
           <button
-            onClick={() => setSelectedTab("player")}
+            onClick={() => handleTabChange("player")}
             className={`px-4 py-2 rounded-md ${selectedTab === "player" ? "bg-blue-500 text-white" : "bg-gray-700 text-gray-300"}`}
           >
             Player

@@ -3,7 +3,7 @@ import connectDB from '../config/db.js';
 export const getPlayers = async () => {
     try {
         // Query to select all players from the players table
-        const query = 'SELECT * FROM players';
+        const query = 'SELECT * FROM player';
 
         // Execute the query and get the results
         const [rows] = await connectDB.execute(query);
