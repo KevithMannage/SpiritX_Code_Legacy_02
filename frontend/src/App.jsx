@@ -4,6 +4,7 @@ import Login from './components/Login/Login'
 import Dashboard from './components/Dashboard/Dashboard'
 import FogetPassword from './components/FogetPassword/FogetPassword'
 import Player  from './components/Players/Player'
+import Chatbot from './components/Chatbot/Chatbot'
 function App() {
   return (
     <Router>
@@ -13,6 +14,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/forgetpassword" element={<FogetPassword />} />
         <Route path="/player" element={<Player />} />
+        <Route path="/chatbot" element={<Chatbot />} />
       </Routes>
     </Router>
   )
