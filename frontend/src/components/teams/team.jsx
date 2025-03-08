@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const TeamPage = () => {
-  const [categories] = useState(['Batsman', 'Allrounder', 'Bowler']); // Categories list
+  const [categories] = useState(['Batsman', 'All-rounder', 'Bowler']); // Categories list
   const [selectedCategory, setSelectedCategory] = useState('Batsman'); // Default selected category
   const [players, setPlayers] = useState([]); // List of players
   const [selectedPlayer, setSelectedPlayer] = useState(null); // Selected player for details
