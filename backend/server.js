@@ -5,7 +5,8 @@ import adminRoutes from './routes/adminRoutes.js';
 import { Server } from 'socket.io';
 import http from 'http';
 import AdminController from './Controllers/adminController.js';
-// Load environment variables
+import userroutes from "./Routes/useroute.js";
+import playerroutes from "./Routes/playeroute.js";
 dotenv.config();
 
 const app = express();
@@ -14,7 +15,8 @@ const io = new Server(server, { cors: { origin: '*' } }); // Initialize Socket.I
 
 app.use(cors());
 app.use(express.json());
-
+app.use("/user", userroutes);
+app.use("/player", playerroutes);
 // Mount admin routes
 app.use('/api/players', adminRoutes);
 AdminController.startRealTimeUpdates(io);

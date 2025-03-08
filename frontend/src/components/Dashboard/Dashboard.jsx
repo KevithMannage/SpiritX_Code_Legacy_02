@@ -4,16 +4,7 @@ import { useNavigate } from "react-router-dom";
 const Dashboard = () => {
   const [username, setUsername] = useState("");
   const [selectedTab, setSelectedTab] = useState("profile");
-  const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   const loggedInUser = localStorage.getItem("loggedInUser");
-  //   if (!loggedInUser) {
-  //     navigate("/"); // Redirect to login if no user
-  //   } else {
-  //     setUsername(loggedInUser);
-  //   }
-  // }, [navigate]);
+  const navigate = useNavigate();  
 
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
@@ -25,7 +16,9 @@ const Dashboard = () => {
   const handleTabChange = (tab) => {
     setSelectedTab(tab);
     if (tab === "player") {
-      navigate("/player"); // Optionally redirect to the player page
+      navigate("/player");
+    } else if (tab === "team") {
+      navigate("/team"); // Navigate to team selection page (optional)
     }
   };
 
@@ -41,6 +34,13 @@ const Dashboard = () => {
             className={`px-4 py-2 rounded-md ${selectedTab === "player" ? "bg-blue-500 text-white" : "bg-gray-700 text-gray-300"}`}
           >
             Player
+          </button>
+          {/* Select Your Team Tab */}
+          <button
+            onClick={() => handleTabChange("team")}
+            className={`px-4 py-2 rounded-md ${selectedTab === "team" ? "bg-green-500 text-white" : "bg-gray-700 text-gray-300"}`}
+          >
+            Select Your Team
           </button>
           {/* Logout Button */}
           <button
@@ -65,7 +65,12 @@ const Dashboard = () => {
               <div className="text-center">
                 <h2 className="text-xl font-semibold">Player Information</h2>
                 <p>Here you can display player-related details or statistics.</p>
-                {/* Add additional player-specific content here */}
+              </div>
+            )}
+            {selectedTab === "team" && (
+              <div className="text-center">
+                <h2 className="text-xl font-semibold">Select Your Team</h2>
+                <p>Here you can view and manage your team selection.</p>
               </div>
             )}
             {selectedTab === "profile" && (
