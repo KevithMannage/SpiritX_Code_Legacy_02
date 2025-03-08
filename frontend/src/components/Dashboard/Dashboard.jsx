@@ -6,14 +6,14 @@ const Dashboard = () => {
   const [selectedTab, setSelectedTab] = useState("profile");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const loggedInUser = localStorage.getItem("loggedInUser");
-    if (!loggedInUser) {
-      navigate("/");
-    } else {
-      setUsername(loggedInUser);
-    }
-  }, [navigate]);
+  // useEffect(() => {
+  //   const loggedInUser = localStorage.getItem("loggedInUser");
+  //   if (!loggedInUser) {
+  //     navigate("/");
+  //   } else {
+  //     setUsername(loggedInUser);
+  //   }
+  // }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");

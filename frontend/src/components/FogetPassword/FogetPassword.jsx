@@ -5,7 +5,7 @@ export default function FogetPassword() {
   const navigate = useNavigate();
 
   const handleBackToLogin = () => {
-    navigate("/login");
+    navigate("/");
   };
 
   return (
