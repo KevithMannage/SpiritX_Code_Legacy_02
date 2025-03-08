@@ -1,4 +1,4 @@
-import PlayerModel from '../models/Admin.js';
+import PlayerModel from '../Models/Admin.js';
 
 class AdminController {
   static async getAllPlayers(req, res) {
@@ -16,8 +16,9 @@ class AdminController {
       const playerData = req.body;
       const result = await PlayerModel.createPlayer(playerData);
       const newPlayer = { Player_ID: result.Player_ID, ...playerData };
-      const io = req.app.get('socketio'); // Access io
-      io.emit('playerAdded', newPlayer); // Broadcast to all clients
+      const io = req.app.get('socketio');
+      io.emit('playerAdded', newPlayer);
+      console.log('Emitted playerAdded:', newPlayer); // Debug log
       res.status(201).json({ message: 'Player created', Player_ID: result.Player_ID });
     } catch (error) {
       console.error('Error creating player:', error);
@@ -33,7 +34,8 @@ class AdminController {
       if (success) {
         const updatedPlayer = { Player_ID: id, ...playerData };
         const io = req.app.get('socketio');
-        io.emit('playerUpdated', updatedPlayer); // Broadcast update
+        io.emit('playerUpdated', updatedPlayer);
+        console.log('Emitted playerUpdated:', updatedPlayer); // Debug log
         res.json({ message: 'Player updated' });
       } else {
         res.status(404).json({ error: 'Player not found' });
@@ -48,16 +50,22 @@ class AdminController {
     try {
       const { id } = req.params;
       const success = await PlayerModel.deletePlayer(id);
+      console.log('Delete success:', success);
       if (success) {
         const io = req.app.get('socketio');
-        io.emit('playerDeleted', { Player_ID: id }); // Broadcast deletion
+        io.emit('playerDeleted', { Player_ID: id });
+        console.log('Emitted playerDeleted:', { Player_ID: id });
         res.json({ message: 'Player deleted' });
       } else {
         res.status(404).json({ error: 'Player not found' });
       }
     } catch (error) {
-      console.error('Error deleting player:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      console.error('Error deleting player:', error.message);
+      if (error.message.includes('referenced in another table')) {
+        res.status(409).json({ error: 'Cannot delete player because it is referenced in another table. Please remove related records first.' });
+      } else {
+        res.status(500).json({ error: 'Internal server error', details: error.message });
+      }
     }
   }
   static async getTopPerformers(req, res){

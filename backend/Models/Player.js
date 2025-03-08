@@ -1,4 +1,4 @@
-import connectDB from '../config/db.js';
+import connectDB from '../Config/db.js';
 
 export const getPlayersByCategory = async (category) => {
     try {

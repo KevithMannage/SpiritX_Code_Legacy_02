@@ -1,36 +1,60 @@
-import db from '../config/db.js';
+import pool from '../Config/db.js';
 
 class PlayerModel {
-  // Get all players
   static async getAllPlayers() {
-    const [rows] = await db.query('SELECT * FROM Player');
+    const [rows] = await pool.query('SELECT * FROM Player');
     return rows;
   }
 
-  // Create a new player
   static async createPlayer(playerData) {
-    const { Name, University, Category, Total_Runs, Balls_Faced, Innings_Played, Wickets, Overs_Bowled, Runs_Conceded } = playerData;
-    const [result] = await db.query(
+    const [result] = await pool.query(
       'INSERT INTO Player (Name, University, Category, Total_Runs, Balls_Faced, Innings_Played, Wickets, Overs_Bowled, Runs_Conceded) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [Name, University, Category, Total_Runs, Balls_Faced, Innings_Played, Wickets, Overs_Bowled, Runs_Conceded]
+      [
+        playerData.Name,
+        playerData.University,
+        playerData.Category,
+        playerData.Total_Runs,
+        playerData.Balls_Faced,
+        playerData.Innings_Played,
+        playerData.Wickets,
+        playerData.Overs_Bowled,
+        playerData.Runs_Conceded,
+      ]
     );
     return { Player_ID: result.insertId };
   }
 
-  // Update a player
   static async updatePlayer(id, playerData) {
-    const { Name, University, Category, Total_Runs, Balls_Faced, Innings_Played, Wickets, Overs_Bowled, Runs_Conceded } = playerData;
-    const [result] = await db.query(
+    const [result] = await pool.query(
       'UPDATE Player SET Name = ?, University = ?, Category = ?, Total_Runs = ?, Balls_Faced = ?, Innings_Played = ?, Wickets = ?, Overs_Bowled = ?, Runs_Conceded = ? WHERE Player_ID = ?',
-      [Name, University, Category, Total_Runs, Balls_Faced, Innings_Played, Wickets, Overs_Bowled, Runs_Conceded, id]
+      [
+        playerData.Name,
+        playerData.University,
+        playerData.Category,
+        playerData.Total_Runs,
+        playerData.Balls_Faced,
+        playerData.Innings_Played,
+        playerData.Wickets,
+        playerData.Overs_Bowled,
+        playerData.Runs_Conceded,
+        id,
+      ]
     );
     return result.affectedRows > 0;
   }
 
-  // Delete a player
   static async deletePlayer(id) {
-    const [result] = await db.query('DELETE FROM Player WHERE Player_ID = ?', [id]);
-    return result.affectedRows > 0;
+    try {
+      const [result] = await pool.query('DELETE FROM Player WHERE Player_ID = ?', [id]);
+      console.log('Delete query result:', result);
+      return result.affectedRows > 0;
+    } catch (error) {
+      console.error('Error in deletePlayer query:', error);
+      if (error.code === 'ER_ROW_IS_REFERENCED') {
+        throw new Error('Cannot delete player because it is referenced in another table.');
+      }
+      throw error; // Re-throw other errors
+    }
   }
 
   static async getTopRunScorers() {

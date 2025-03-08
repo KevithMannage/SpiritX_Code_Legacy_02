@@ -4,22 +4,24 @@ import dotenv from 'dotenv';
 import adminRoutes from './routes/adminRoutes.js';
 import { Server } from 'socket.io';
 import http from 'http';
-import AdminController from './Controllers/adminController.js';
+import teamroutes from "./Routes/teamroute.js";
 import userroutes from "./Routes/useroute.js";
 import playerroutes from "./Routes/playeroute.js";
+// Load environment variables
 dotenv.config();
 
 const app = express();
-const server = http.createServer(app); // Create HTTP server
-const io = new Server(server, { cors: { origin: '*' } }); // Initialize Socket.IO
+const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: 'http://localhost:5173' } }); // Specific origin
 
 app.use(cors());
 app.use(express.json());
-app.use("/user", userroutes);
-app.use("/player", playerroutes);
+
 // Mount admin routes
 app.use('/api/players', adminRoutes);
-AdminController.startRealTimeUpdates(io);
+app.use("/user", userroutes);
+app.use("/player", playerroutes);
+app.use("/team",teamroutes);
 
 // Socket.IO connection
 io.on('connection', (socket) => {
