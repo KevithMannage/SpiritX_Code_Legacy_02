@@ -8,15 +8,15 @@ import bcrypt from 'bcryptjs'; // For password hashing
 import { createUser } from '../Models/User.js'; // Assuming you have a function for user creation
 
 export const registerUser = async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password ,email} = req.body;
 
-  if (!username || !password) {
-    return res.status(400).send('Missing required parameters: username and password');
+  if (!username || !password||!email) {
+    return res.status(400).send('Missing required parameters: username email password');
   }
 
   try {
     // Check if the user already exists
-    const existingUser = await getUserByEmailAndPassword(username, password); // Adjust this if needed for checking username
+    const existingUser = await getUserByUsername(username); // Adjust this if needed for checking username
     if (existingUser) {
       return res.status(400).send('User with this username already exists');
     }
@@ -25,7 +25,7 @@ export const registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds for bcrypt
 
     // Save the new user to the database
-    const newUser = await createUser(username, hashedPassword);
+    const newUser = await createUser(username, hashedPassword,email);
 
     res.status(201).json({ message: 'User registered successfully', user: newUser });
   } catch (err) {
@@ -71,34 +71,34 @@ export const loginUser = async (req, res) => {
 
   try {
     // Retrieve the user from the database based on username
-    console.log(username);
-    const user = await getUserByUsername(username);
+    const user = await  getUserByUsername(username);
     console.log('User from database:', user);
+    if (user) {
+      console.log('User from database:', user);
 
-    if (user.Password===password) {
       // Compare the provided password with the hashed password in the database
-     // const isPasswordValid = await bcrypt.compare(password, user.Password);
+      const isPasswordValid = await bcrypt.compare(password, user.Password);
 
-      // if (isPasswordValid) {
-      //   // Passwords match, generate the JWT access token
-      //   const accessToken = jwt.sign(
-      //     { username: user.Username },
-      //     process.env.JWT_SECRET_KEY,
-      //     { expiresIn: '12h' }
-      //   );
+      if (isPasswordValid) {
+        // Passwords match, generate the JWT access token
+        const accessToken = jwt.sign(
+          { username: user.username },
+          process.env.JWT_SECRET_KEY,
+          { expiresIn: '12h' }
+        );
 
-      //   // Generate the refresh token with 30 days expiration
-      //   const refreshToken = jwt.sign(
-      //     { username: user.Username },
-      //     process.env.JWT_REFRESH_SECRET_KEY,
-      //     { expiresIn: '30d' }
-      //   );
+        // Generate the refresh token with 30 days expiration
+        const refreshToken = jwt.sign(
+          { username: user.username },
+          process.env.JWT_REFRESH_SECRET_KEY, 
+          { expiresIn: '30d' }
+        );
 
-        res.status(200).json({ user });
-      // } else {
-      //   // Invalid password
-      //   res.status(401).send('Invalid username or password');
-      // }
+        res.status(200).json({ user, accessToken, refreshToken });
+      } else {
+        // Invalid password
+        res.status(401).send('Invalid username or password');
+      }
     } else {
       // User not found
       res.status(401).send('Invalid username or password');

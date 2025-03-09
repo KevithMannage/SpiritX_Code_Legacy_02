@@ -24,7 +24,7 @@ const Login = () => {
     if (!validate()) return;
   
     try {
-      const response = await fetch('http://localhost:3000/user/login', {
+      const response = await fetch('http://localhost:5000/user/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,15 +33,29 @@ const Login = () => {
       });
   
       const data = await response.json();
-
+      console.log(data.user.User_ID);
+      console.log(data.user);
+      const isadmin=data.user.Is_Admin;
+      console.log(isadmin);
      // localStorage.setItem("accessToken", JSON.stringify(data.accessToken));
   
-      if (response.ok &&!response.Is_admin) {
+      if (response.ok &&isadmin===0) {
         // Assuming the server sends a token or success status
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("loggedInUser", username);
+        localStorage.setItem("userId", data.user.User_ID);
+          
         navigate("/dashboard");
-      } else {
+      } 
+      if (response.ok && isadmin===1) {
+        // Assuming the server sends a token or success status
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("loggedInadmin", username);
+        localStorage.setItem("userId", data.user.User_ID);
+          
+        navigate("/admin");
+      }
+      else {
         // Handle login failure (e.g., wrong username/password)
         setErrors({ general: data.message || "Invalid username or password" });
       }

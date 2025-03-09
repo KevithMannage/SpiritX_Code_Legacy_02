@@ -7,6 +7,7 @@ import http from 'http';
 import teamroutes from "./Routes/teamroute.js";
 import userroutes from "./Routes/useroute.js";
 import playerroutes from "./Routes/playeroute.js";
+import budgetroutes from './Routes/BudjetRoute.js';
 import AdminController from './Controllers/adminController.js';
 
 // Load environment variables
@@ -24,6 +25,7 @@ app.use('/api/players', adminRoutes);
 app.use("/user", userroutes);
 app.use("/player", playerroutes);
 app.use("/team",teamroutes);
+app.use("/budget",budgetroutes);
 
 // Socket.IO connection
 io.on('connection', (socket) => {
