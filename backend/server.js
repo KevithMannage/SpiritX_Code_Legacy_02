@@ -9,6 +9,7 @@ import userroutes from "./Routes/useroute.js";
 import playerroutes from "./Routes/playeroute.js";
 import budgetroutes from './Routes/BudjetRoute.js';
 import AdminController from './Controllers/adminController.js';
+import leaderboardRouters from './Routes/leaderboardRoutes.js';
 // Load environment variables
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use("/play", playerroutes);
 app.use("/team" , teamroutes);
 
 app.use("/budget",budgetroutes);
+app.use("/leaderboard", leaderboardRouters);
 
 
 // Socket.IO connection
