@@ -1,5 +1,5 @@
-import mysql from 'mysql2/promise'; // Use the promise-based API
-import dotenv from 'dotenv';
+import mysql from "mysql2/promise"; // Use the promise-based API
+import dotenv from "dotenv";
 
 // Load environment variables
 dotenv.config();
@@ -20,10 +20,11 @@ const pool = mysql.createPool({
 (async () => {
   try {
     const connection = await pool.getConnection();
-    console.log('Connected to MySQL database');
-    connection.release(); // Release the connection back to the pool
+    console.log("Connected to MySQL database");
+    connection.release();
   } catch (err) {
-    console.error('Error connecting to MySQL:', err);
+    console.error("Error connecting to MySQL:", err);
+    process.exit(1); // Exit with failure code
   }
 })();
 
@@ -35,13 +36,12 @@ export const execute = async (query, params) => {
     const [rows] = await connection.execute(query, params);
     return rows; // Ensure this returns an array
   } catch (err) {
-    console.error('Error executing query:', err);
+    console.error("Error executing query:", err);
     throw err;
   } finally {
     if (connection) connection.release();
   }
 };
-
 
 // Export the pool for advanced use cases (optional)
 export default pool;

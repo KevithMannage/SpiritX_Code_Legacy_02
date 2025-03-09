@@ -35,6 +35,7 @@ CREATE TABLE `Player` (
   `Runs_Conceded` int,
   `Created_at` datetime default current_timestamp,
   `Updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `Player_Points` int,
   `Values` int,
   PRIMARY KEY (`Player_ID`)
 );
