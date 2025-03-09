@@ -14,7 +14,7 @@ const Dashboard = () => {
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("loggedInUser");
-    navigate("/login");
+    navigate("/");
   };
 
   const handleTabChange = (tab) => {
@@ -22,7 +22,9 @@ const Dashboard = () => {
     if (tab === "team") {
       // Navigate to the specific team page based on userId
       navigate(`/team/${userId}`);
-    } else {
+    } else if(tab === "team-details"){
+        navigate(`/team-details/${userId}`)
+    }else {
       navigate(`/${tab}`);
     }
   };
@@ -42,6 +44,7 @@ const Dashboard = () => {
         <div className="flex space-x-4">
           <button onClick={() => handleTabChange("playerdetails")} className={`px-4 py-2 rounded-md ${selectedTab === "playerdetails" ? "bg-blue-500 text-white" : "bg-gray-700 text-gray-300"}`}>Player</button>
           <button onClick={() => handleTabChange("team")} className={`px-4 py-2 rounded-md ${selectedTab === "team" ? "bg-green-500 text-white" : "bg-gray-700 text-gray-300"}`}>Select Your Team</button>
+          <button onClick={() => handleTabChange("team-details")} className={`px-4 py-2 rounded-md ${selectedTab === "team" ? "bg-green-500 text-white" : "bg-gray-700 text-gray-300"}`}>Team</button>
           <button onClick={() => handleTabChange("leaderboard")} className={`px-4 py-2 rounded-md ${selectedTab === "leaderboard" ? "bg-purple-500 text-white" : "bg-gray-700 text-gray-300"}`}>Leaderboard</button>
           <button onClick={() => handleTabChange("budget")} className={`px-4 py-2 rounded-md ${selectedTab === "budget" ? "bg-yellow-500 text-white" : "bg-gray-700 text-gray-300"}`}>Budget</button>
           <button onClick={() => handleTabChange("chatbot")} className={`px-4 py-2 rounded-md ${selectedTab === "chatbot" ? "bg-teal-500 text-white" : "bg-gray-700 text-gray-300"}`}>Chatbot</button>

@@ -11,7 +11,8 @@ import Leaderboard from './components/Dashboard/leaderboard';
 import Budget from "./components/budget/budget";
 import AdminDashboard from './components/Dashboard/AdminDashboard';
 import Chatbox from './components/Chatbot/Chatbot';import TopPerformers from './pages/admin/tournamantSammary/tournamentSammary'
-import TopPerformers from './pages/admin/tournamantSammary/tournamentSammary'
+import TeamDetails from './components/teams/teamDetails';
+// import TopPerformers from './pages/admin/tournamantSammary/tournamentSammary'
 function App() {
   return (
     <Router>
@@ -27,6 +28,7 @@ function App() {
         <Route path="/players" element={<Players />} /> {/* Add Players route */}
         <Route path="/playerstats" element={<PlayerStats />} />ss
         <Route path="/team/:User_ID" element={<TeamPage />} />
+        <Route path="/team-details/:User_ID" element={<TeamDetails />} />
         <Route path="/tournamentSummary" element={<TopPerformers />} />
         <Route path="/leaderboard" element={<Leaderboard/>} />
       </Routes>

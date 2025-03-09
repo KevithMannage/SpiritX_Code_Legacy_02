@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import adminRoutes from './routes/adminRoutes.js';
 import { Server } from 'socket.io';
 import http from 'http';
-import teamroutes from "./Routes/teamroute.js";
+import teamroutes from "./Routes/teamroutes.js";
 import userroutes from "./Routes/useroute.js";
 import playerroutes from "./Routes/playeroute.js";
 import budgetroutes from './Routes/BudjetRoute.js';
@@ -25,7 +25,7 @@ app.use(express.json());
 app.use('/api/players', adminRoutes);
 app.use("/user", userroutes);
 app.use("/play", playerroutes);
-app.use("/team" , teamRoutes);
+app.use("/team" , teamroutes);
 
 app.use("/budget",budgetroutes);
 
