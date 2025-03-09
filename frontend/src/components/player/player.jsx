@@ -1,182 +1,111 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
 
-const PlayerDetails = () => {
+const API_URL = 'http://localhost:5000/api/players'; // API endpoint for fetching players
+
+const Players = () => {
   const [players, setPlayers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [expandedPlayer, setExpandedPlayer] = useState(null);
 
-  const navigate = useNavigate();
+  // Simulate authentication check (assuming userId is stored in localStorage after login)
+  const userId = localStorage.getItem('userId');
+  const isAuthenticated = !!userId; // Simple check for demo; adjust based on your auth system
 
   useEffect(() => {
-    const fetchPlayers = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/player/getplayers");
-        if (!response.ok) {
-          throw new Error("Failed to fetch players");
-        }
-        const data = await response.json();
-        setPlayers(data);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (isAuthenticated) {
+      fetchPlayers();
+    }
+  }, [isAuthenticated]);
 
-    fetchPlayers();
-  }, []);
-
-  const handleBackToDashboard = () => {
-    navigate("/dashboard");
+  const fetchPlayers = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(API_URL);
+      if (!response.ok) throw new Error('Failed to fetch players');
+      const data = await response.json();
+      setPlayers(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const toggleDetails = (index) => {
-    setExpandedPlayer(expandedPlayer === index ? null : index);
+  const handlePlayerClick = (player) => {
+    setSelectedPlayer(player);
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen bg-gradient-to-br from-blue-50 via-teal-50 to-yellow-50">
-        <div className="text-xl font-semibold text-gray-600 animate-pulse">
-          Loading Players...
-        </div>
-      </div>
-    );
-  }
+  const closeDetailedView = () => {
+    setSelectedPlayer(null);
+  };
 
-  if (error) {
+  if (!isAuthenticated) {
     return (
-      <div className="flex justify-center items-center h-screen bg-gradient-to-br from-blue-50 via-teal-50 to-yellow-50">
-        <div className="text-xl font-semibold text-red-400 bg-white/95 p-4 rounded-lg shadow-lg">
-          Error: {error}
-        </div>
+      <div className="container mx-auto p-4 bg-gray-100 min-h-screen">
+        <h1 className="text-3xl font-bold text-center mb-6">Players</h1>
+        <p className="text-red-500 text-center">Please log in to view players.</p>
       </div>
     );
   }
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-blue-50 via-teal-50 to-yellow-50 flex flex-col">
-      {/* Header Section */}
-      <header className="bg-gradient-to-r from-blue-200 to-teal-200 text-gray-800 p-4 flex justify-between items-center shadow-md">
-        <div className="text-2xl font-bold tracking-wide flex items-center gap-2">
-          <span className="text-blue-500">🏏</span> Player Information
+    <div className="container mx-auto p-4 bg-gray-100 min-h-screen">
+      <h1 className="text-3xl font-bold text-center mb-6">Players</h1>
+
+      {loading && (
+        <p className="text-center text-gray-500">Loading players...</p>
+      )}
+
+      {error && (
+        <div className="mb-4 p-2 bg-red-100 text-red-700 rounded text-center">
+          {error}
         </div>
-        <button
-          onClick={handleBackToDashboard}
-          className="px-4 py-2 rounded-full bg-blue-400 hover:bg-blue-500 text-white transition-all duration-300 transform hover:scale-105 shadow-md"
-        >
-          Back to Dashboard
-        </button>
-      </header>
+      )}
 
-      {/* Main Content */}
-      <div className="flex-1 flex justify-center px-6 py-8 mx-auto">
-        <div className="w-full max-w-5xl bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-gray-100 transform transition-all duration-300 hover:shadow-xl">
-          <div className="p-8 space-y-6">
-            <h1 className="text-3xl font-extrabold tracking-tight text-gray-800 text-center animate-fade-in">
-              Player Roster
-            </h1>
+      {!loading && !error && players.length === 0 && (
+        <p className="text-center text-gray-500">No players available.</p>
+      )}
 
-            {/* Player List */}
-            {players.length > 0 ? (
-              <div className="space-y-4">
-                {players.map((player, index) => (
-                  <div
-                    key={index}
-                    className="p-5 border border-gray-200 rounded-xl bg-gray-50 shadow-md transition-all duration-300 hover:shadow-lg"
-                  >
-                    <div className="flex justify-between items-center">
-                      <h2 className="text-xl font-semibold text-blue-500">
-                        {player.Name}
-                      </h2>
-                      <button
-                        onClick={() => toggleDetails(index)}
-                        className="px-4 py-2 rounded-full bg-blue-400 hover:bg-blue-500 text-white transition-all duration-300 transform hover:scale-105"
-                      >
-                        {expandedPlayer === index ? "Hide Details" : "View Details"}
-                      </button>
-                    </div>
-
-                    {/* Player Details (Expanded) */}
-                    {expandedPlayer === index && (
-                      <div className="mt-4 p-4 bg-white rounded-lg shadow-inner animate-slide-up">
-                        <p className="text-gray-600 mb-2">
-                          <strong className="text-gray-800">University:</strong>{" "}
-                          {player.University}
-                        </p>
-                        <p className="text-gray-600 mb-4">
-                          <strong className="text-gray-800">Category:</strong>{" "}
-                          {player.Category}
-                        </p>
-
-                        {/* Player Stats Grid */}
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                          <div className="p-3 bg-gray-100 rounded-lg">
-                            <p className="text-gray-600">
-                              <strong>Total Runs:</strong> {player.Total_Runs}
-                            </p>
-                          </div>
-                          <div className="p-3 bg-gray-100 rounded-lg">
-                            <p className="text-gray-600">
-                              <strong>Balls Faced:</strong> {player.Balls_Faced}
-                            </p>
-                          </div>
-                          <div className="p-3 bg-gray-100 rounded-lg">
-                            <p className="text-gray-600">
-                              <strong>Innings:</strong> {player.Innings_Played}
-                            </p>
-                          </div>
-                          <div className="p-3 bg-gray-100 rounded-lg">
-                            <p className="text-gray-600">
-                              <strong>Wickets:</strong> {player.Wickets}
-                            </p>
-                          </div>
-                          <div className="p-3 bg-gray-100 rounded-lg">
-                            <p className="text-gray-600">
-                              <strong>Overs Bowled:</strong> {player.Overs_Bowled}
-                            </p>
-                          </div>
-                          <div className="p-3 bg-gray-100 rounded-lg">
-                            <p className="text-gray-600">
-                              <strong>Runs Conceded:</strong> {player.Runs_Conceded}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-center text-gray-600 text-lg">
-                No players found in the roster.
-              </p>
-            )}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        {players.map((player) => (
+          <div
+            key={player.Player_ID}
+            className="p-4 bg-white rounded-lg shadow cursor-pointer hover:bg-gray-50"
+            onClick={() => handlePlayerClick(player)}
+          >
+            <p className="font-medium">{player.Name}</p>
+            <p>{player.University}</p>
+            <p className="text-sm text-gray-600">{player.Category}</p>
           </div>
-        </div>
+        ))}
       </div>
 
-      {/* Custom Animations */}
-      <style jsx>{`
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes slideUp {
-          from { transform: translateY(20px); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
-        .animate-fade-in {
-          animation: fadeIn 0.5s ease-in;
-        }
-        .animate-slide-up {
-          animation: slideUp 0.5s ease-out;
-        }
-      `}</style>
-    </section>
+      {selectedPlayer && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h2 className="text-2xl font-semibold mb-4">{selectedPlayer.Name}</h2>
+            <p><strong>University:</strong> {selectedPlayer.University}</p>
+            <p><strong>Category:</strong> {selectedPlayer.Category}</p>
+            <h3 className="text-lg font-medium mt-4 mb-2">Statistics</h3>
+            <p><strong>Total Runs:</strong> {selectedPlayer.Total_Runs}</p>
+            <p><strong>Balls Faced:</strong> {selectedPlayer.Balls_Faced}</p>
+            <p><strong>Innings Played:</strong> {selectedPlayer.Innings_Played}</p>
+            <p><strong>Wickets:</strong> {selectedPlayer.Wickets}</p>
+            <p><strong>Overs Bowled:</strong> {selectedPlayer.Overs_Bowled}</p>
+            <p><strong>Runs Conceded:</strong> {selectedPlayer.Runs_Conceded}</p>
+            <button
+              onClick={closeDetailedView}
+              className="mt-4 w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
-export default PlayerDetails;
+export default Players;

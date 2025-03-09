@@ -1,339 +1,231 @@
-// import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
-// const TeamPage = () => {
-//   const [categories] = useState(['Batsman', 'All-rounder', 'Bowler']); // Categories list
-//   const [selectedCategory, setSelectedCategory] = useState('Batsman'); // Default selected category
-//   const [players, setPlayers] = useState([]); // List of players
-//   const [selectedPlayer, setSelectedPlayer] = useState(null); // Selected player for details
+const API_URL = 'http://localhost:5000'; // Base URL without /api
 
-//   useEffect(() => {
-//     // Fetch players based on the selected category
-//     const fetchPlayersByCategory = async () => {
-//       try {
-//         const response = await fetch('http://localhost:5000/player/getplayerbycategory', {
-//           method: 'POST',
-//           headers: {
-//             'Content-Type': 'application/json',
-//           },
-//           body: JSON.stringify({ category: selectedCategory }), // Send category in the body
-//         });
+// Function to calculate player stats based on handbook formulas
+const calculateStats = (player) => {
+  const battingStrikeRate = player.Balls_Faced > 0 ? (player.Total_Runs / player.Balls_Faced) * 100 : 0;
+  const battingAverage = player.Innings_Played > 0 ? player.Total_Runs / player.Innings_Played : 0;
+  const totalBallsBowled = player.Overs_Bowled * 6; // Convert overs to balls
+  const bowlingStrikeRate = player.Wickets > 0 ? totalBallsBowled / player.Wickets : 0;
+  const economyRate = totalBallsBowled > 0 ? (player.Runs_Conceded / totalBallsBowled) * 6 : 0;
 
-//         const data = await response.json();
-//         setPlayers(data); // Set the list of players for the selected category
-//       } catch (error) {
-//         console.error('Error fetching players:', error);
-//       }
-//     };
+  const points =
+    (battingStrikeRate / 5 + battingAverage * 0.8) +
+    (bowlingStrikeRate > 0 ? 500 / bowlingStrikeRate : 0) +
+    (economyRate > 0 ? 140 / economyRate : 0);
 
-//     fetchPlayersByCategory(); // Call the function to fetch players
-//   }, [selectedCategory]); // Re-run the fetch whenever the category changes
+  const valueRaw = (9 * points + 100) * 1000;
+  const value = Math.round(valueRaw / 50000) * 50000;
 
-//   const handleCategoryChange = (category) => {
-//     setSelectedCategory(category); // Update the selected category
-//   };
+  return {
+    ...player, // Keep original player data
+    Value: value, // Add calculated Value for frontend use
+  };
+};
 
-//   const handlePlayerSelection = (player) => {
-//     setSelectedPlayer(player); // Set the selected player for detailed view
-//   };
-
-//   return (
-//     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-8">
-//       <div className="bg-white shadow-lg rounded-lg w-full max-w-2xl p-6">
-//         <h1 className="text-3xl font-bold text-center text-blue-600 mb-4">Team Page</h1>
-
-//         <div className="mb-4">
-//           <h2 className="text-xl font-semibold text-gray-700">Select Category:</h2>
-//           <div className="flex space-x-4 mt-2">
-//             {categories.map((category) => (
-//               <button
-//                 key={category}
-//                 className={`px-4 py-2 text-lg rounded-md ${
-//                   selectedCategory === category ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
-//                 }`}
-//                 onClick={() => handleCategoryChange(category)}
-//               >
-//                 {category}
-//               </button>
-//             ))}
-//           </div>
-//         </div>
-
-//         <div>
-//           <h2 className="text-2xl font-semibold text-gray-700 mb-4">Players in {selectedCategory}</h2>
-//           <div className="space-y-4">
-//             {players.length > 0 ? (
-//               players.map((player) => (
-//                 <div
-//                   key={player.Player_ID}
-//                   className="p-4 border rounded-lg bg-blue-50 cursor-pointer"
-//                   onClick={() => handlePlayerSelection(player)}
-//                 >
-//                   <h3 className="text-xl font-bold text-blue-600">{player.Name}</h3>
-//                   <p className="text-gray-700">University: {player.University}</p>
-//                 </div>
-//               ))
-//             ) : (
-//               <p className="text-gray-500">No players available in this category</p>
-//             )}
-//           </div>
-//         </div>
-
-//         {selectedPlayer && (
-//           <div className="mt-6 p-6 border rounded-lg bg-white shadow-md">
-//             <h3 className="text-2xl font-bold text-blue-600">Selected Player</h3>
-//             <p className="text-lg mt-2"><strong>Name:</strong> {selectedPlayer.Name}</p>
-//             <p className="text-lg"><strong>University:</strong> {selectedPlayer.University}</p>
-//             <button
-//               className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md"
-//               onClick={() => alert('Player added to team')}
-//             >
-//               Add to Team
-//             </button>
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default TeamPage;
-
-
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-
-const TeamPage = () => {
-  const { User_ID } = useParams();
-
-  if (!User_ID) {
-    return <div>Invalid User ID</div>;
-  }
-  const [categories] = useState(["Batsman", "All-rounder", "Bowler"]);
-  const [selectedCategory, setSelectedCategory] = useState("Batsman");
+const SelectYourTeam = () => {
+  const [category, setCategory] = useState('Batsman');
   const [players, setPlayers] = useState([]);
-  const [teamPlayers, setTeamPlayers] = useState([]);
-  const [teamID, setTeamID] = useState(0);
+  const [team, setTeam] = useState([]);
+  const [budget, setBudget] = useState({ remaining: 9000000, spent: 0 });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const userId = localStorage.getItem('userId') || '1';
 
   useEffect(() => {
-    const fetchPlayersByCategory = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:5000/player/getplayerbycategory",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ category: selectedCategory }),
-          }
-        );
+    fetchTeam();
+    fetchBudget();
+  }, []);
 
-        const data = await response.json();
-        setPlayers(data);
-      } catch (error) {
-        console.error("Error fetching players:", error);
-      }
-    };
-
-    fetchPlayersByCategory();
-  }, [selectedCategory]);
-
-  useEffect(() => {
-    console.log("Fetching team players for User_ID:", User_ID);
-    const fetchTeamByUser = async () => {
-      try {
-        const teamResponse = await fetch(
-          `http://localhost:5000/team/getteambyuser/${User_ID}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const team = await teamResponse.json();
-        setTeamID(team.Team_ID);
-      } catch (error) {
-        console.error("Error fetching team:", error);
-      }
-    };
-
-    if (User_ID) {
-      fetchTeamByUser();
+  const fetchBudget = async () => {
+    try {
+      const response = await fetch(`${API_URL}/team/budget?userId=${userId}`);
+      if (!response.ok) throw new Error('Failed to fetch budget');
+      const data = await response.json();
+      setBudget(data);
+    } catch (err) {
+      setError(err.message);
     }
-  }, [User_ID]);
-
-  useEffect(() => {
-    const fetchTeamMembers = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/team/getMembers/${teamID}`
-        );
-        const data = await response.json();
-
-        console.log("Fetched team members:", data); // Debugging
-
-        if (data && Array.isArray(data.players)) {
-          setTeamPlayers(data.players); // Extract the array correctly
-        } else {
-          console.error("Invalid data format:", data);
-          setTeamPlayers([]); // Fallback to an empty array
-        }
-      } catch (error) {
-        console.error("Error fetching team members:", error);
-        setTeamPlayers([]); // Fallback in case of an error
-      }
-    };
-
-    if (teamID) {
-      // Changed condition to check teamID instead of User_ID
-      fetchTeamMembers();
-    }
-  }, [teamID]); // Changed dependency to teamID
-
-  const handleCategoryChange = (category) => {
-    setSelectedCategory(category);
   };
 
-  const handleAddPlayer = async (player) => {
-    if (!teamID) {
-      alert("Team ID is not available yet. Please try again later.");
+  const fetchTeam = async () => {
+    try {
+      const response = await fetch(`${API_URL}/team?userId=${userId}`);
+      if (!response.ok) throw new Error('Failed to fetch team');
+      const data = await response.json();
+      setTeam(data);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const loadPlayers = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_URL}/play/${category}`);
+      if (!response.ok) throw new Error('Failed to load players');
+      const rawPlayers = await response.json();
+      // Map database keys to expected keys for calculateStats
+      const mappedPlayers = rawPlayers.map((player) => ({
+        ...player,
+        Total_Runs: player.Total_runs,
+        Innings_Played: player.Innings_played,
+      }));
+      // Calculate stats for each player
+      const playersWithStats = mappedPlayers.map((player) => calculateStats(player));
+      setPlayers(playersWithStats);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addPlayer = async (playerId, purchasedPrice) => {
+    if (team.length >= 11) {
+      setError('Team is already complete (maximum 11 players)');
       return;
     }
+    setLoading(true);
+    setError(null);
     try {
-      await fetch("http://localhost:5000/team/addPlayerToTeam", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          Team_ID: teamID,
-          Player_ID: player.Player_ID,
-        }),
+      const response = await fetch(`${API_URL}/team/add-player`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, playerId, purchasedPrice }),
       });
-
-      setTeamPlayers([...teamPlayers, player]);
-      alert(`${player.Name} added to team`);
-    } catch (error) {
-      console.error("Error adding player:", error);
-      alert("Failed to add player to team");
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to add player');
+      await Promise.all([fetchTeam(), fetchBudget()]);
+      alert(data.message);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // const handleRemovePlayer = async (player) => {
-  //   if (!teamID) {
-  //     alert("Team ID is not available yet. Please try again later.");
-  //     return;
-  //   }
-  //   try {
-  //     await fetch("http://localhost:5000/team/removePlayerFromTeam", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         Team_ID: teamID,
-  //         Player_ID: player.Player_ID,
-  //       }),
-  //     });
+  const removePlayer = async (playerId) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_URL}/team/remove-player`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, playerId }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to remove player');
+      await Promise.all([fetchTeam(), fetchBudget()]);
+      alert(data.message);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  //     setTeamPlayers(
-  //       teamPlayers.filter((p) => p.Player_ID !== player.Player_ID)
-  //     );
-  //     alert(`${player.Name} removed from team`);
-  //   } catch (error) {
-  //     console.error("Error removing player:", error);
-  //     alert("Failed to remove player from team");
-  //   }
-  // };
-
-  // Log User_ID and teamID to console before return
-  console.log("User_ID:", User_ID);
-  console.log("Team_ID:", teamID);
-  console.log("Team Players:", teamPlayers);
+  const isPlayerInTeam = (playerId) => {
+    return team.some((teamPlayer) => teamPlayer.Player_ID === playerId);
+  };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-8">
-      <div className="bg-white shadow-lg rounded-lg w-full max-w-2xl p-6">
-        <h1 className="text-3xl font-bold text-center text-blue-600 mb-4">
-          Team Page
-        </h1>
+    <div className="container mx-auto p-4 bg-gray-100 min-h-screen">
+      <h1 className="text-3xl font-bold text-center mb-6">Select Your Team</h1>
 
-        <div className="mb-4">
-          <h2 className="text-xl font-semibold text-gray-700">
-            Select Category:
-          </h2>
-          <div className="flex space-x-4 mt-2">
-            {categories.map((category) => (
+      <div className="mb-4 p-4 bg-white rounded-lg shadow">
+        <h2 className="text-xl font-semibold">Team Status</h2>
+        <p>Remaining Budget: Rs. {budget.remaining.toLocaleString()}</p>
+        <p>Spent: Rs. {budget.spent.toLocaleString()}</p>
+        <p>Players Selected: {team.length}/11</p>
+        {team.length >= 11 && (
+          <p className="text-red-500 mt-2">Team complete! Maximum 11 players reached.</p>
+        )}
+      </div>
+
+      <div className="mb-4">
+        <label className="block text-lg font-medium mb-2">Select Category:</label>
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          disabled={loading}
+        >
+          <option value="Batsman">Batsman</option>
+          <option value="All-Rounder">All-Rounder</option>
+          <option value="Bowler">Bowler</option>
+        </select>
+        <button
+          onClick={loadPlayers}
+          className={`mt-2 w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 ${
+            loading ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+          disabled={loading}
+        >
+          {loading ? 'Loading...' : 'Load Players'}
+        </button>
+      </div>
+
+      {error && (
+        <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">{error}</div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        {players.map((player) => {
+          const isAdded = isPlayerInTeam(player.Player_ID);
+          return (
+            <div key={player.Player_ID} className="p-4 bg-white rounded-lg shadow">
+              <p className="font-medium">{player.Name} ({player.University})</p>
+              <p>Value: Rs. {player.Value.toLocaleString()}</p>
               <button
-                key={category}
-                className={`px-4 py-2 text-lg rounded-md ${
-                  selectedCategory === category
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 text-gray-700"
-                }`}
-                onClick={() => handleCategoryChange(category)}
+                onClick={() => !isAdded && addPlayer(player.Player_ID, player.Value)}
+                className={`mt-2 w-full px-4 py-2 text-white rounded ${
+                  isAdded
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-green-500 hover:bg-green-600'
+                } ${loading || team.length >= 11 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={loading || team.length >= 11 || isAdded}
               >
-                {category}
+                {isAdded ? 'Player Added' : 'Add to Team'}
               </button>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="bg-white p-4 rounded-lg shadow">
+        <h2 className="text-xl font-semibold mb-4">Your Team</h2>
+        {team.length === 0 ? (
+          <p className="text-gray-500">No players selected yet.</p>
+        ) : (
+          <div className="space-y-2">
+            {team.map((player) => (
+              <div
+                key={player.Player_ID}
+                className="flex justify-between items-center p-2 bg-gray-100 rounded"
+              >
+                <span>
+                  {player.Name} ({player.University}) - Rs.{' '}
+                  {player.Purchased_Price.toLocaleString()}
+                </span>
+                <button
+                  onClick={() => removePlayer(player.Player_ID)}
+                  className={`px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 ${
+                    loading ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                  disabled={loading}
+                >
+                  Remove
+                </button>
+              </div>
             ))}
           </div>
-        </div>
-
-        <div>
-          <h2 className="text-2xl font-semibold text-gray-700 mb-4">
-            Players in {selectedCategory}
-          </h2>
-          <div className="space-y-4">
-            {players.length > 0 ? (
-              players.map((player) => {
-                const isInTeam = teamPlayers.some(
-                  (p) => p.Player_ID === player.Player_ID
-                );
-                return (
-                  <div
-                    key={player.Player_ID}
-                    className="p-4 border rounded-lg bg-blue-50 flex justify-between items-center"
-                  >
-                    <div>
-                      <h3 className="text-xl font-bold text-blue-600">
-                        {player.Name}
-                      </h3>
-                      <p className="text-gray-700">
-                        University: {player.University}
-                      </p>
-                    </div>
-                    {isInTeam ? (
-                      // <button
-                      //   className="px-4 py-2 bg-red-500 text-white rounded-md"
-                      //   onClick={() => handleRemovePlayer(player)}
-                      // >
-                      //   Remove From Team
-                      // </button>
-                      <span className="px-4 py-2 bg-blue-500 text-white rounded-md">
-                        Player is Added
-                      </span>
-                    ) : (
-                      <button
-                        className="px-4 py-2 bg-green-500 text-white rounded-md"
-                        onClick={() => handleAddPlayer(player)}
-                      >
-                        Add to Team
-                      </button>
-                    )}
-                  </div>
-                );
-              })
-            ) : (
-              <p className="text-gray-500">
-                No players available in this category
-              </p>
-            )}
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default TeamPage;
+export default SelectYourTeam;

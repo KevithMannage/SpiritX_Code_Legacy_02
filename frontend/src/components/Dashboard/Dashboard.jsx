@@ -8,12 +8,8 @@ const Dashboard = () => {
   const [newMessage, setNewMessage] = useState("");
   const navigate = useNavigate();
 
-  const userId = localStorage.getItem("loggedInUser") || "defaultUserId";
-
-  useEffect(() => {
-    // Simulate fetching username
-    setUsername("PlayerOne");
-  }, []);
+  // Get the userId from localStorage (or your preferred method)
+  const userId = localStorage.getItem("userId") || "defaultUserId";
 
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");

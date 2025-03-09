@@ -10,9 +10,10 @@ import playerroutes from "./Routes/playeroute.js";
 import budgetroutes from './Routes/BudjetRoute.js';
 import AdminController from './Controllers/adminController.js';
 import leaderboardRouters from './Routes/leaderboardRoutes.js';
-
 // Load environment variables
 dotenv.config();
+
+
 
 const app = express();
 const server = http.createServer(app);
@@ -24,10 +25,12 @@ app.use(express.json());
 // Mount admin routes
 app.use('/api/players', adminRoutes);
 app.use("/user", userroutes);
-app.use("/player", playerroutes);
-app.use("/team",teamroutes);
+app.use("/play", playerroutes);
+app.use("/team" , teamRoutes);
+
 app.use("/budget",budgetroutes);
 app.use("/leaderboard", leaderboardRouters);
+
 
 // Socket.IO connection
 io.on('connection', (socket) => {

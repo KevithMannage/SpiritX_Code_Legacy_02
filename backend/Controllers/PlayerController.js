@@ -1,115 +1,57 @@
-// import { getPlayers,getPlayersByCategory } from '../Models/Player.js';
+import mysql from 'mysql2/promise';
 
+// Debug logs to verify environment variables
+console.log('MYSQL_HOST:', process.env.MYSQL_HOST);
+console.log('MYSQL_USER:', process.env.MYSQL_USER);
+console.log('MYSQL_PASSWORD:', process.env.MYSQL_PASSWORD ? '[hidden]' : 'undefined');
+console.log('MYSQL_DATABASE:', process.env.MYSQL_DATABASE);
+console.log('MYSQL_PORT:', process.env.MYSQL_PORT);
 
-
-
-//  export const fetchPlayers = async (req, res) => {
-//   const { category } = req.body;  // Get category from query params
-
-//   // Check if category is provided
-//   if (!category) {
-//     return res.status(400).json({ message: 'Category is required' });
-//   }
-
-//   try {
-//     // Call the model function to fetch players by category
-//     const players = await getPlayersByCategory(category);
-
-//     // If no players are found, return a 404 response
-//     if (players.length === 0) {
-//       return res.status(404).json({ message: 'No players found for this category' });
-//     }
-
-//     // Send the fetched players data as a response
-//     res.json(players);
-//   } catch (error) {
-//     console.error('Error fetching players:', error);
-//     res.status(500).json({ message: 'An error occurred while fetching players' });
-//   }
-// };
-
-
-
-
-// // Controller to fetch all players
-// export const getAllPlayers = async (req, res) => {
-//     try {
-//         const players = await getPlayers();
-        
-//         // Validate the players data
-//         if (!Array.isArray(players)) {
-//             console.error("Error: Players data is not an array.");
-//             return res.status(500).json({ 
-//                 message: "Failed to fetch players.", 
-//                 error: "Invalid data format" 
-//             });
-//         }
-
-//         // Send the players data as a response
-//         return res.status(200).json(players);
-//     } catch (error) {
-//         console.error("Error fetching players:", error.message, error.stack);
-//         return res.status(500).json({ 
-//             message: "Error fetching players", 
-//             error: error.message 
-//         });
-//     }
-// };
-
-import { getPlayers,getPlayersByCategory } from '../Models/Player.js';
-
-
-
-
- export const fetchPlayers = async (req, res) => {
-  const { category } = req.body;  // Get category from query params
-
-  // Check if category is provided
-  if (!category) {
-    return res.status(400).json({ message: 'Category is required' });
-  }
-
+const getDbConnection = async () => {
   try {
-    // Call the model function to fetch players by category
-    const players = await getPlayersByCategory(category);
-
-    // If no players are found, return a 404 response
-    if (players.length === 0) {
-      return res.status(404).json({ message: 'No players found for this category' });
-    }
-
-    // Send the fetched players data as a response
-    res.json(players);
-  } catch (error) {
-    console.error('Error fetching players:', error);
-    res.status(500).json({ message: 'An error occurred while fetching players' });
+    const connection = await mysql.createConnection({
+      host: process.env.MYSQL_HOST || 'localhost',
+      user: process.env.MYSQL_USER || 'root',
+      password: process.env.MYSQL_PASSWORD || 'Matheesha@11',
+      database: process.env.MYSQL_DATABASE || 'spiritx_2',
+      port: process.env.MYSQL_PORT || 3306,
+    });
+    console.log('Database connection established');
+    return connection;
+  } catch (err) {
+    throw new Error(`Failed to connect to database: ${err.message}`);
   }
 };
 
-
-
-
-// Controller to fetch all players
-export const getAllPlayers = async (req, res) => {
-    try {
-        const players = await getPlayers();
-        
-        // Validate the players data
-        if (!Array.isArray(players)) {
-            console.error("Error: Players data is not an array.");
-            return res.status(500).json({ 
-                message: "Failed to fetch players.", 
-                error: "Invalid data format" 
-            });
-        }
-
-        // Send the players data as a response
-        return res.status(200).json(players);
-    } catch (error) {
-        console.error("Error fetching players:", error.message, error.stack);
-        return res.status(500).json({ 
-            message: "Error fetching players", 
-            error: error.message 
-        });
-    }
+export const getPlayersByCategory = async (req, res) => {
+  let db;
+  try {
+    const { category } = req.params;
+    console.log('Fetching players for category:', category);
+    db = await getDbConnection();
+    const [players] = await db.query(
+      `SELECT 
+        Player_ID, 
+        Name, 
+        University, 
+        Category, 
+        Total_runs,
+        Balls_Faced,
+        Innings_played,
+        Wickets,
+        Overs_Bowled,
+        Runs_Conceded
+      FROM Player 
+      WHERE Category = ?`,
+      [category]
+    );
+    console.log('Players fetched:', players.length);
+    res.json(players);
+  } catch (err) {
+    console.error('Error in getPlayersByCategory:', err);
+    res.status(500).json({ error: err.message });
+  } finally {
+    if (db) await db.end();
+    console.log('Database connection closed');
+  }
 };
