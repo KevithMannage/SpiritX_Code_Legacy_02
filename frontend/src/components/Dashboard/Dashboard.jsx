@@ -23,6 +23,8 @@ const Dashboard = () => {
       navigate(`/team/${userId}`);
     } else if(tab === "team-details"){
         navigate(`/team-details/${userId}`)
+    }else if(tab==="leaderboard"){
+        navigate(`/leaderboard/${userId}`)
     }else {
       navigate(`/${tab}`);
     }
