@@ -1,9 +1,9 @@
 // leaderboardRoutes.js
-const express = require("express");
+import express from 'express';
+import LeaderboardController from '../Controllers/leaderboardController.js';
+
 const router = express.Router();
-const leaderboardController = require("../Controllers/leaderboardController.js");
-const authenticate = require("../middleware/authMiddleware.js"); // Assuming you have authentication middleware
 
-router.get("/leaderboard", authenticate, leaderboardController.getLeaderboard);
+router.get('/', LeaderboardController.getLeaderboard);
 
-module.exports = router;
+export default router;
