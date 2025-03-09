@@ -62,6 +62,34 @@ const TeamPage = () => {
     }
   }, [User_ID]);
 
+  useEffect(() => {
+    const fetchTeamMembers = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/team/getMembers/${teamID}`
+        );
+        const data = await response.json();
+
+        console.log("Fetched team members:", data); // Debugging
+
+        if (data && Array.isArray(data.players)) {
+          setTeamPlayers(data.players); // Extract the array correctly
+        } else {
+          console.error("Invalid data format:", data);
+          setTeamPlayers([]); // Fallback to an empty array
+        }
+      } catch (error) {
+        console.error("Error fetching team members:", error);
+        setTeamPlayers([]); // Fallback in case of an error
+      }
+    };
+
+    if (teamID) {
+      // Changed condition to check teamID instead of User_ID
+      fetchTeamMembers();
+    }
+  }, [teamID]); // Changed dependency to teamID
+
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
   };
@@ -91,36 +119,37 @@ const TeamPage = () => {
     }
   };
 
-  const handleRemovePlayer = async (player) => {
-    if (!teamID) {
-      alert("Team ID is not available yet. Please try again later.");
-      return;
-    }
-    try {
-      await fetch("http://localhost:5000/team/removePlayerFromTeam", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          Team_ID: teamID,
-          Player_ID: player.Player_ID,
-        }),
-      });
+  // const handleRemovePlayer = async (player) => {
+  //   if (!teamID) {
+  //     alert("Team ID is not available yet. Please try again later.");
+  //     return;
+  //   }
+  //   try {
+  //     await fetch("http://localhost:5000/team/removePlayerFromTeam", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         Team_ID: teamID,
+  //         Player_ID: player.Player_ID,
+  //       }),
+  //     });
 
-      setTeamPlayers(
-        teamPlayers.filter((p) => p.Player_ID !== player.Player_ID)
-      );
-      alert(`${player.Name} removed from team`);
-    } catch (error) {
-      console.error("Error removing player:", error);
-      alert("Failed to remove player from team");
-    }
-  };
+  //     setTeamPlayers(
+  //       teamPlayers.filter((p) => p.Player_ID !== player.Player_ID)
+  //     );
+  //     alert(`${player.Name} removed from team`);
+  //   } catch (error) {
+  //     console.error("Error removing player:", error);
+  //     alert("Failed to remove player from team");
+  //   }
+  // };
 
   // Log User_ID and teamID to console before return
   console.log("User_ID:", User_ID);
   console.log("Team_ID:", teamID);
+  console.log("Team Players:", teamPlayers);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-8">
@@ -174,12 +203,15 @@ const TeamPage = () => {
                       </p>
                     </div>
                     {isInTeam ? (
-                      <button
-                        className="px-4 py-2 bg-red-500 text-white rounded-md"
-                        onClick={() => handleRemovePlayer(player)}
-                      >
-                        Remove From Team
-                      </button>
+                      // <button
+                      //   className="px-4 py-2 bg-red-500 text-white rounded-md"
+                      //   onClick={() => handleRemovePlayer(player)}
+                      // >
+                      //   Remove From Team
+                      // </button>
+                      <span className="px-4 py-2 bg-blue-500 text-white rounded-md">
+                        Player is Added
+                      </span>
                     ) : (
                       <button
                         className="px-4 py-2 bg-green-500 text-white rounded-md"

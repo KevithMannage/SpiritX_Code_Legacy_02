@@ -68,6 +68,7 @@ import {
   addPlayer_to_team,
   removePlayer_from_team,
   getteamidbyuser,
+  getTeamPlayers,
 } from "../Models/Team.js";
 
 // Get the count of players in a user's team
@@ -162,5 +163,30 @@ export const getteambyuser = async (req, res) => {
     res
       .status(500)
       .json({ error: "Failed to get Team ID", details: err.message });
+  }
+};
+
+// Get the list of players in a user's team
+export const getMembers = async (req, res) => {
+  const { teamId } = req.params;
+
+  // Validate input
+  if (!teamId) {
+    return res.status(400).json({ error: "Team ID is required" });
+  }
+
+  try {
+    // Call the function to get team members
+    const players = await getTeamPlayers(teamId);
+
+    // Send success response
+    res.json({ players });
+  } catch (err) {
+    // Handle errors and send appropriate response
+    console.error("Error getting team members:", err);
+    res.status(500).json({
+      error: "Failed to get team members",
+      details: err.message,
+    });
   }
 };

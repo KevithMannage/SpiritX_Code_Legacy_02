@@ -95,18 +95,18 @@ export const removePlayer_from_team = async (Team_ID, Player_ID) => {
   }
 };
 // Get all players in a user's team
-export const getTeamPlayers = (User_ID, callback) => {
-  const query = `
-        SELECT Player.Player_ID, Player.Name, Player.University 
-        FROM Teams 
-        JOIN Player ON Teams.Player_ID = Player.Player_ID
-        WHERE Teams.User_ID = ?
-    `;
-  db.query(query, [User_ID], (err, result) => {
-    if (err) return callback(err.message, null);
-    callback(null, result);
-  });
-};
+// export const getTeamPlayers = (User_ID, callback) => {
+//   const query = `
+//         SELECT Player.Player_ID, Player.Name, Player.University
+//         FROM Teams
+//         JOIN Player ON Teams.Player_ID = Player.Player_ID
+//         WHERE Teams.User_ID = ?
+//     `;
+//   db.query(query, [User_ID], (err, result) => {
+//     if (err) return callback(err.message, null);
+//     callback(null, result);
+//   });
+// };
 
 export const getteamidbyuser = async (userId) => {
   const query = "SELECT Team_ID FROM Team WHERE User_ID = ?";
@@ -122,3 +122,38 @@ export const getteamidbyuser = async (userId) => {
   }
 };
 //
+
+// Get all players in a user's team
+// export const getTeamPlayers = (teamId) => {
+//   return new Promise((resolve, reject) => {
+//     const query = `
+//       SELECT Player_ID
+//       FROM spiritx_2.team_members
+//       WHERE Team_ID = ?;
+//     `;
+
+//     db.query(query, [teamId], (err, result) => {
+//       if (err) {
+//         reject(err);
+//       } else {
+//         resolve(result);
+//       }
+//     });
+//   });
+// };
+
+export const getTeamPlayers = async (teamId) => {
+  const query =
+    "SELECT Player_ID FROM spiritx_2.team_members WHERE Team_ID = ?";
+
+  try {
+    const [result] = await db.query(query, [teamId]);
+    // if (result.length === 0) {
+    //   throw new Error("No players found for this team");
+    // }
+    return result;
+  } catch (err) {
+    console.error("Error getting team players:", err);
+    throw err;
+  }
+};
