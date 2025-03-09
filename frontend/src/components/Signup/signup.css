@@ -5,23 +5,32 @@ html {
     /* Center horizontally */
     align-items: center;
     /* Center vertically */
-    background: #0f263d;
+    background: #011429;
     /* Optional: Add a background color to match the design */
 }
 
 .signup-container {
-    min-height: 500px;
+    min-height: 600px;
     min-width: 450px;
     max-height: 500px;
     max-width: 450px;
     margin: 100px auto;
     padding: 30px;
-    background: #e0e7f7;
+    background: rgba(46, 65, 87, 0.8);
+    /* Reduced opacity */
+    border: 2px solid #4b5e70;
+    /* Lighter border color */
     border-radius: 20px;
     position: relative;
-    background-image: radial-gradient(circle at 1px 1px, #d1d9e6 1px, transparent 0);
-    background-size: 20px 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.Inuput_Labels {
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
 }
 
 .user-icon {
@@ -47,8 +56,8 @@ html {
     text-align: center;
     margin-top: 50px;
     margin-bottom: 50px;
-    color: #6b7280;
-    font-family: 'Cavolinia', cursive;
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
     font-size: 24px;
     font-weight: 800;
     text-transform: uppercase;
