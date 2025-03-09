@@ -64,6 +64,7 @@ const TeamPage = () => {
 
   useEffect(() => {
     const fetchTeamMembers = async () => {
+      if (!teamID) return;
       try {
         const response = await fetch(
           `http://localhost:5000/team/getMembers/${teamID}`

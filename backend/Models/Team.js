@@ -70,30 +70,30 @@ export const addPlayer_to_team = async (Team_ID, Player_ID) => {
 };
 // Remove a player from the user's team
 export const removePlayer_from_team = async (Team_ID, Player_ID) => {
-  // Check if the player exists before attempting deletion
   const checkQuery =
     "SELECT * FROM Team_Members WHERE Team_ID = ? AND Player_ID = ?";
   const deleteQuery =
     "DELETE FROM Team_Members WHERE Team_ID = ? AND Player_ID = ?";
 
   try {
-    // Step 1: Check if the player exists in the team
+    // Check if player exists
     const [checkResult] = await db.query(checkQuery, [Team_ID, Player_ID]);
 
     if (checkResult.length === 0) {
+      console.warn(`Player ${Player_ID} not found in team ${Team_ID}`);
       throw new Error("Player not found in team");
     }
 
-    // Step 2: Delete the player
+    // Delete player
     const [deleteResult] = await db.query(deleteQuery, [Team_ID, Player_ID]);
 
-    // Return the result of the deletion
-    return deleteResult;
+    return deleteResult; // ✅ Ensure affectedRows is checked in controller
   } catch (err) {
     console.error("Error in removePlayer_from_team:", err);
-    throw err; // Re-throw the error to be handled by the caller
+    throw err;
   }
 };
+
 // Get all players in a user's team
 // export const getTeamPlayers = (User_ID, callback) => {
 //   const query = `
@@ -151,6 +151,32 @@ export const getTeamPlayers = async (teamId) => {
     // if (result.length === 0) {
     //   throw new Error("No players found for this team");
     // }
+    return result;
+  } catch (err) {
+    console.error("Error getting team players:", err);
+    throw err;
+  }
+};
+export const getTeam = async (teamId) => {
+  const query = `
+    SELECT 
+      TM.Player_ID, 
+      P.Name, 
+      P.University, 
+      P.Category, 
+      P.Total_Runs, 
+      P.Balls_Faced, 
+      P.Innings_Played, 
+      P.Wickets, 
+      P.Overs_Bowled, 
+      P.Runs_Conceded
+    FROM spiritx_2.team_members TM
+    JOIN spiritx_2.player P USING (Player_ID)
+    WHERE TM.Team_ID = ?;
+  `;
+
+  try {
+    const [result] = await db.query(query, [teamId]);
     return result;
   } catch (err) {
     console.error("Error getting team players:", err);
