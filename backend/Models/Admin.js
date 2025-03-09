@@ -58,17 +58,17 @@ class PlayerModel {
   }
 
   static async getTopRunScorers() {
-    const [rows] = await db.query('SELECT Name, Total_Runs FROM Player ORDER BY Total_Runs DESC LIMIT 1');
+    const [rows] = await pool.query('SELECT Name, Total_Runs FROM Player ORDER BY Total_Runs DESC LIMIT 1');
     return rows;
   }
 
   static async getTopWicketTakers() {
-    const [rows] = await db.query('SELECT Name, Wickets FROM Player ORDER BY Wickets DESC LIMIT 1');
+    const [rows] = await pool.query('SELECT Name, Wickets FROM Player ORDER BY Wickets DESC LIMIT 1');
     return rows;
   }
 
   static async getTotalRunsAndWickets() {
-    const [rows] = await db.query('SELECT SUM(Total_Runs) as TotalRuns,SUM(Wickets) as TotalWickets FROM player')
+    const [rows] = await pool.query('SELECT SUM(Total_Runs) as TotalRuns,SUM(Wickets) as TotalWickets FROM player')
     return rows;
   }
   static async checkForUpdates(io) {

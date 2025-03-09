@@ -6,6 +6,7 @@ import FogetPassword from './components/FogetPassword/FogetPassword'
 import Players from '../pages/admin/player/Players'; // Your Players component
 import PlayerStats from '../pages/admin/player_stats/PlayerStats';
 import TeamPage from './components/teams/team'
+import TopPerformers from './pages/admin/tournamantSammary/tournamentSammary'
 
 function App() {
   return (
@@ -16,8 +17,9 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/forgetpassword" element={<FogetPassword />} />
         <Route path="/players" element={<Players />} /> {/* Add Players route */}
-        <Route path="/playerstats" element={<PlayerStats />} />
+        <Route path="/playerstats" element={<PlayerStats />} />ss
         <Route path="/team" element={<TeamPage />} />
+        <Route path="/tournamentSummary" element={<TopPerformers />} />
       </Routes>
     </Router>
   );

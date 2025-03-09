@@ -7,6 +7,8 @@ import http from 'http';
 import teamroutes from "./Routes/teamroute.js";
 import userroutes from "./Routes/useroute.js";
 import playerroutes from "./Routes/playeroute.js";
+import AdminController from './Controllers/adminController.js';
+
 // Load environment variables
 dotenv.config();
 
@@ -33,6 +35,10 @@ io.on('connection', (socket) => {
 
 // Make io accessible in routes/controllers
 app.set('socketio', io);
+
+//realtime update for tournament summary
+AdminController.startRealTimeUpdates(io);
+
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
