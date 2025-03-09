@@ -10,8 +10,8 @@ import Playerdetails from './components/player/player';
 import Leaderboard from './components/Dashboard/leaderboard';
 import Budget from "./components/budget/budget";
 import AdminDashboard from './components/Dashboard/AdminDashboard';
-import Chatbox from './components/Chatbot/Chatbot';
-
+import Chatbox from './components/Chatbot/Chatbot';import TopPerformers from './pages/admin/tournamantSammary/tournamentSammary'
+import TopPerformers from './pages/admin/tournamantSammary/tournamentSammary'
 function App() {
   return (
     <Router>
@@ -25,8 +25,9 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/forgetpassword" element={<FogetPassword />} />
         <Route path="/players" element={<Players />} /> {/* Add Players route */}
-        <Route path="/playerstats" element={<PlayerStats />} />
+        <Route path="/playerstats" element={<PlayerStats />} />ss
         <Route path="/team/:User_ID" element={<TeamPage />} />
+        <Route path="/tournamentSummary" element={<TopPerformers />} />
         <Route path="/leaderboard" element={<Leaderboard/>} />
       </Routes>
     </Router>
