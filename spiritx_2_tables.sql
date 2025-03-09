@@ -45,5 +45,6 @@ CREATE TABLE `Team_Members` (
   `Added_Date` Datetime default current_timestamp,
   PRIMARY KEY (`Team_ID`, `Player_ID`),
   FOREIGN KEY (`Team_ID`) REFERENCES `Team`(`Team_ID`),
-  FOREIGN KEY (`Player_ID`) REFERENCES `Player`(`Player_ID`)
+  FOREIGN KEY (`Player_ID`) REFERENCES `Player`(`Player_ID`),
+  
 );
