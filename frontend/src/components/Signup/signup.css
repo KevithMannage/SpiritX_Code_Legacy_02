@@ -1,0 +1,182 @@
+body,
+html {
+
+    justify-content: center;
+    /* Center horizontally */
+    align-items: center;
+    /* Center vertically */
+    background: #0f263d;
+    /* Optional: Add a background color to match the design */
+}
+
+.signup-container {
+    min-height: 500px;
+    min-width: 450px;
+    max-height: 500px;
+    max-width: 450px;
+    margin: 100px auto;
+    padding: 30px;
+    background: #e0e7f7;
+    border-radius: 20px;
+    position: relative;
+    background-image: radial-gradient(circle at 1px 1px, #d1d9e6 1px, transparent 0);
+    background-size: 20px 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-icon {
+    width: 90px;
+    height: 90px;
+    /* background: #6b7280; */
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 50%;
+    /* Ensure the element is circular */
+    border: 3px solid #0f263d;
+    /* Add a solid border with the specified color */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    /* Add a shadow effect */
+    /* Debugging: Add a border to see the element */
+}
+
+.signup-title {
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    color: #6b7280;
+    font-family: 'Cavolinia', cursive;
+    font-size: 24px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.auth-error {
+    color: red;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.input-group {
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.input-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 350px;
+    box-sizing: border-box;
+
+}
+
+.input-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 15px;
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
+}
+
+.input-field {
+    width: 100%;
+    /* Use 100% to fill the wrapper */
+    padding: 17px 17px 17px 45px;
+    /* Left padding = icon width (20px) + icon left (15px) + extra space (10px) */
+    box-sizing: border-box;
+    border: none;
+    border-radius: 25px;
+    background: #d1d9e6;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+}
+
+.input-field::placeholder {
+    color: #6b7280;
+}
+
+.input-field:focus {
+    background: #c0c9d6;
+
+}
+
+
+
+.eye-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 15px;
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+.eye-closed {
+    background-image: url('/eye.png');
+}
+
+.eye-open {
+    background-image: url('/hidden.png');
+}
+
+.error {
+    color: red;
+    font-size: 12px;
+    text-align: center;
+    margin-top: 5px;
+}
+
+.strength {
+    font-size: 12px;
+    margin-top: 5px;
+    text-align: center;
+}
+
+.strength.strong {
+    color: green;
+}
+
+.strength.medium {
+    color: orange;
+}
+
+.strength.weak {
+    color: red;
+}
+
+
+.signup-button {
+    width: 75%;
+    padding: 12px;
+    background-color: #6b7280;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    margin: 10px auto 0;
+    /* Center horizontally with auto margins */
+    text-transform: uppercase;
+    display: block;
+    /* Ensure the button is a block element for margin: auto to work */
+}
+
+.signup-button:hover {
+    background-color: #5a6069;
+}
+
+.signup-button:active {
+    background-color: #4d5159;
+}
