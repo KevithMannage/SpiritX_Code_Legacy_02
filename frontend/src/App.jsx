@@ -3,8 +3,8 @@ import Signup from './components/Signup/Signup'
 import Login from './components/Login/Login'
 import Dashboard from './components/Dashboard/Dashboard'
 import FogetPassword from './components/FogetPassword/FogetPassword'
-import Players from '../pages/admin/player/Players'; // Your Players component
-import PlayerStats from '../pages/admin/player_stats/PlayerStats';
+import Players from './pages/admin/player/Players'; // Your Players component
+import PlayerStats from './pages/admin/player_stats/PlayerStats';
 import TeamPage from './components/teams/team'
 
 function App() {
