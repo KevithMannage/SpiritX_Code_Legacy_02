@@ -7,10 +7,7 @@ import Players from '../pages/admin/player/Players';
 import PlayerStats from '../pages/admin/player_stats/PlayerStats';
 import TeamPage from './components/teams/team';
 import Playerdetails from './components/player/player';
-import Leaderboard from './components/Dashboard/leaderboard';
-import Budget from './components/budget/budget';
-import Chatbox from './components/Chatbot/Chatbot';
-import AdminDashboard from './components/Dashboard/AdminDashboard';
+import Leaderboard from './components/Dashboard/leaderboard'
 function App() {
   return (
     <Router>
