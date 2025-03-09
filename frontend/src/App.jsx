@@ -5,21 +5,21 @@ import Dashboard from './components/Dashboard/Dashboard';
 import FogetPassword from './components/FogetPassword/FogetPassword'
 import Players from './pages/admin/player/Players'; // Your Players component
 import PlayerStats from './pages/admin/player_stats/PlayerStats';
-import TeamPage from './components/teams/team'
+import TeamPage from './components/teams/team';
 
 function App() {
   return (
     <Router>
       <Routes>
-      <Route path="/playerdetails" element={<Playerdetails />} /> {/* Add Players route */}
+      {/* <Route path="/playerdetails" element={<Playerdetails />} />  */}
         <Route path="/signup" element={<Signup />} />
         <Route path="/" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/forgetpassword" element={<FogetPassword />} />
         <Route path="/players" element={<Players />} /> {/* Add Players route */}
         <Route path="/playerstats" element={<PlayerStats />} />
-        <Route path="/team" element={<TeamPage />} />
-        <Route path="/leaderboard" element={<Leaderboard/>} />
+        <Route path="/team/:User_ID" element={<TeamPage />} />
+        {/* <Route path="/leaderboard" element={<Leaderboard/>} /> */}
       </Routes>
     </Router>
   );

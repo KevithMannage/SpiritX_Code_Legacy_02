@@ -4,9 +4,9 @@ import dotenv from 'dotenv';
 import adminRoutes from './routes/adminRoutes.js';
 import { Server } from 'socket.io';
 import http from 'http';
-import teamroutes from "./Routes/teamroute.js";
-import userroutes from "./Routes/useroute.js";
-import playerroutes from "./Routes/playeroute.js";
+import teamroutes from "./routes/teamroute.js";
+import userroutes from "./routes/useroute.js";
+import playerroutes from "./routes/playeroute.js";
 // Load environment variables
 dotenv.config();
 
