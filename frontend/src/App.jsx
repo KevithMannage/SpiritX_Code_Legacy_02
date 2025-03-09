@@ -7,12 +7,18 @@ import Players from '../pages/admin/player/Players';
 import PlayerStats from '../pages/admin/player_stats/PlayerStats';
 import TeamPage from './components/teams/team';
 import Playerdetails from './components/player/player';
-import Leaderboard from './components/Dashboard/leaderboard'
+import Leaderboard from './components/Dashboard/leaderboard';
+import Budget from './components/budget/budget';
+import Chatbox from './components/Chatbot/Chatbot';
+import AdminDashboard from './components/Dashboard/AdminDashboard';
 function App() {
   return (
     <Router>
       <Routes>
       <Route path="/playerdetails" element={<Playerdetails />} /> {/* Add Players route */}
+      <Route path="/budget" element={<Budget />} />
+      <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/chatbot" element={<Chatbox />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />

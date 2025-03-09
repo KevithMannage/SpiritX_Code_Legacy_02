@@ -1,10 +1,14 @@
 import connectDB from '../Config/db.js';
 
-export const createUser = async (username, password) => {
-  const query = 'INSERT INTO users (username, password) VALUES (?, ?)';
-  const result = await  connectDB.execute(query, [username, password]); // Assuming you're using a MySQL database
+export const createUser = async (username, password, email) => {
+  const query = `
+    INSERT INTO user (username, password, email, Is_Admin, Created_date) 
+    VALUES (?, ?, ?, 0, NOW())`;  // Set Is_Admin to 0 and Created_date to NOW()
+  
+  const result = await connectDB.execute(query, [username, password, email]);
   return result;
 };
+
 
 
 export const getUserByUsername = async (username) => {
@@ -36,7 +40,7 @@ export const getUserByUsername = async (username) => {
 export const getUserByEmailAndPassword = (username, password) => {
   return new Promise((resolve, reject) => {
     connectDB.query(
-      'SELECT * FROM users WHERE username = ? AND password = ?',
+      'SELECT * FROM user WHERE username = ? AND password = ?',
       [username, password],
       (err, results) => {
         if (err) {
