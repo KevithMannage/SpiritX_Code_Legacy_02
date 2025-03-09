@@ -1,92 +1,102 @@
-import { useState, useEffect } from "react";
-import axios from "axios"; // Import axios
+import React, { useState, useEffect } from 'react';
+
+const API_URL = 'http://localhost:5000'; // Base API URL
 
 const Budget = () => {
-  const [budget, setBudget] = useState(1000); // Initial budget
-  const [expense, setExpense] = useState("");
-  const [amount, setAmount] = useState("");
-  const [expenses, setExpenses] = useState([]);
-  const [playerData, setPlayerData] = useState(null); // State to store player data
+  const [team, setTeam] = useState([]);
+  const [budget, setBudget] = useState({ remaining: 9000000, spent: 0 });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Fetch player data when the component mounts using axios
+  // Get userId from localStorage
+  const userId = localStorage.getItem('userId');
+  const isAuthenticated = !!userId;
+
   useEffect(() => {
-    const fetchPlayerData = async () => {
-      const userId = localStorage.getItem("userId"); // Get userId from localStorage
-      if (userId) {
-        try {
-          const response = await axios.get(`http://localhost:5000/budget/budgetforuser/${userId}`);
-          console.log(response.data); // Log the response data
-          setPlayerData(response.data); // Set the player data to state
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      } else {
-        console.error("User ID not found in localStorage");
-      }
-    };
+    if (isAuthenticated) {
+      fetchTeamAndCalculateBudget();
+    }
+  }, [isAuthenticated]);
 
-    fetchPlayerData();
-  }, []); // Empty dependency array means it runs only once when the component mounts
+  const fetchTeamAndCalculateBudget = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_URL}/team?userId=${userId}`);
+      if (!response.ok) throw new Error('Failed to fetch team');
+      const teamData = await response.json();
+      setTeam(teamData);
 
-  const handleAddExpense = () => {
-    if (expense && amount) {
-      const newAmount = parseFloat(amount);
-      if (newAmount > 0 && newAmount <= budget) {
-        setExpenses([...expenses, { name: expense, cost: newAmount }]);
-        setBudget(budget - newAmount);
-        setExpense("");
-        setAmount("");
-      } else {
-        alert("Invalid amount or insufficient budget.");
-      }
+      // Calculate spent and remaining budget
+      const totalSpent = teamData.reduce((sum, player) => sum + player.Purchased_Price, 0);
+      const initialBudget = 9000000; // Rs. 9,000,000 as per handbook
+      setBudget({
+        remaining: initialBudget - totalSpent,
+        spent: totalSpent,
+      });
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Conditional style for the remaining budget
-  const budgetStyle = {
-    color: budget < 100 ? 'red' : 'green',
-    fontWeight: 'bold',
-    fontSize: '1.25rem',
-  };
+  if (!isAuthenticated) {
+    return (
+      <div className="container mx-auto p-4 bg-gray-100 min-h-screen">
+        <h1 className="text-3xl font-bold text-center mb-6">Budget</h1>
+        <p className="text-red-500 text-center">Please log in to view your budget.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-6 bg-white shadow-lg rounded-lg w-full max-w-md mx-auto">
-      <h2 className="text-xl font-bold mb-4">Budget Tracker</h2>
-      
-      {/* Remaining Budget with conditional color */}
-      <p style={budgetStyle}>
-        Remaining Budget: ${budget.toFixed(2)}
-      </p>
+    <div className="container mx-auto p-4 bg-gray-100 min-h-screen">
+      <h1 className="text-3xl font-bold text-center mb-6">Budget</h1>
 
-      {/* Display player data */}
-      {playerData && Array.isArray(playerData) && playerData.length > 0 ? (
-        playerData.map((player, index) => (
-          <div key={index} className="mt-6 p-4 bg-gray-100 rounded">
-            <h3 className="text-lg font-semibold">Player Info {index + 1}</h3>
-            <p><strong>Name:</strong> {player.Name}</p>
-            <p><strong>University:</strong> {player.University}</p>
-            <p><strong>Category:</strong> {player.Category}</p>
-            <p><strong>Total Runs:</strong> {player.Total_Runs}</p>
-            <p><strong>Balls Faced:</strong> {player.Balls_Faced}</p>
-            <p><strong>Innings Played:</strong> {player.Innings_Played}</p>
-            <p><strong>Wickets:</strong> {player.Wickets}</p>
-            <p><strong>Overs Bowled:</strong> {player.Overs_Bowled}</p>
-            <p><strong>Runs Conceded:</strong> {player.Runs_Conceded}</p>
-          </div>
-        ))
-      ) : (
-        <p>No player data available.</p>
+      {loading && (
+        <p className="text-center text-gray-500">Loading budget details...</p>
       )}
 
-      {/* Expenses list */}
-      <ul className="mt-4">
-        {expenses.map((item, index) => (
-          <li key={index} className="flex justify-between p-2 border-b">
-            <span>{item.name}</span>
-            <span>${item.cost.toFixed(2)}</span>
-          </li>
-        ))}
-      </ul>
+      {error && (
+        <div className="mb-4 p-2 bg-red-100 text-red-700 rounded text-center">
+          {error}
+        </div>
+      )}
+
+      {!loading && !error && (
+        <div className="bg-white p-4 rounded-lg shadow">
+          <h2 className="text-xl font-semibold mb-4">Budget Overview</h2>
+          <p>
+            <strong>Remaining Budget:</strong> Rs. {budget.remaining.toLocaleString()}
+          </p>
+          <p>
+            <strong>Total Spent:</strong> Rs. {budget.spent.toLocaleString()}
+          </p>
+          <p>
+            <strong>Initial Budget:</strong> Rs. 9,000,000
+          </p>
+
+          <h3 className="text-lg font-medium mt-6 mb-2">Players in Your Team</h3>
+          {team.length === 0 ? (
+            <p className="text-gray-500">No players selected yet.</p>
+          ) : (
+            <div className="space-y-2">
+              {team.map((player) => (
+                <div
+                  key={player.Player_ID}
+                  className="flex justify-between items-center p-2 bg-gray-100 rounded"
+                >
+                  <span>
+                    {player.Name} ({player.University})
+                  </span>
+                  <span>Rs. {player.Purchased_Price.toLocaleString()}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

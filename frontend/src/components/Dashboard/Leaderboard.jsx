@@ -1,53 +1,66 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+// src/components/Leaderboard.js
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const Leaderboard = () => {
-  const navigate = useNavigate();
+    const [leaderboard, setLeaderboard] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-  // Sample leaderboard data
-  const sampleData = [
-    { rank: 1, name: "Alice", score: 1500 },
-    { rank: 2, name: "Bob", score: 1400 },
-    { rank: 3, name: "Charlie", score: 1300 },
-    { rank: 4, name: "David", score: 1200 },
-    { rank: 5, name: "Eve", score: 1100 },
-  ];
+    const fetchLeaderboard = async () => {
+        try {
+            const response = await axios.get("http://localhost:5000/api/leaderboard");
+            setLeaderboard(response.data.leaderboard);
+            setLoading(false);
+        } catch (error) {
+            console.error("Error fetching leaderboard:", error);
+            setLoading(false);
+        }
+    };
 
-  return (
-    <section className="bg-gray-50 dark:bg-gray-900 h-screen flex flex-col items-center justify-center">
-      <div className="w-full max-w-2xl bg-white rounded-lg shadow-md p-6 dark:bg-gray-800">
-        <h1 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-4">
-          Welcome to the Leaderboard
-        </h1>
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-gray-200 dark:bg-gray-700">
-              <th className="p-2">Rank</th>
-              <th className="p-2">Player</th>
-              <th className="p-2">Score</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sampleData.map((player) => (
-              <tr key={player.rank} className="border-b dark:border-gray-600">
-                <td className="p-2">{player.rank}</td>
-                <td className="p-2">{player.name}</td>
-                <td className="p-2">{player.score}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="mt-4 flex justify-center">
-          <button
-            onClick={() => navigate("/dashboard")}
-            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-          >
-            Back to Dashboard
-          </button>
+    useEffect(() => {
+        fetchLeaderboard();
+        const interval = setInterval(fetchLeaderboard, 5000); // Poll every 5 seconds
+        return () => clearInterval(interval);
+    }, []);
+
+    if (loading) {
+        return <div className="text-center text-gray-500 text-lg mt-10">Loading...</div>;
+    }
+
+    return (
+        <div className="max-w-4xl mx-auto p-6">
+            <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Leaderboard</h2>
+            <div className="overflow-x-auto">
+                <table className="w-full border-collapse bg-white shadow-md rounded-lg">
+                    <thead>
+                        <tr className="bg-gray-100 text-gray-700 text-left">
+                            <th className="p-4 text-sm font-semibold md:text-base">Rank</th>
+                            <th className="p-4 text-sm font-semibold md:text-base">Username</th>
+                            <th className="p-4 text-sm font-semibold md:text-base">Points</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {leaderboard.map((entry, index) => (
+                            <tr
+                                key={index}
+                                className={`border-b ${
+                                    entry.isCurrentUser
+                                        ? "bg-cyan-100 font-semibold"
+                                        : "hover:bg-gray-50"
+                                }`}
+                            >
+                                <td className="p-4 text-sm md:text-base">{index + 1}</td>
+                                <td className="p-4 text-sm md:text-base">{entry.username}</td>
+                                <td className="p-4 text-sm md:text-base">
+                                    {entry.points.toFixed(2)}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
-    </section>
-  );
+    );
 };
 
 export default Leaderboard;

@@ -11,6 +11,7 @@ import Leaderboard from './components/Dashboard/leaderboard';
 import Budget from "./components/budget/budget";
 import AdminDashboard from './components/Dashboard/AdminDashboard';
 import Chatbox from './components/Chatbot/Chatbot';
+
 function App() {
   return (
     <Router>

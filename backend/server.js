@@ -4,12 +4,16 @@ import dotenv from 'dotenv';
 import adminRoutes from './routes/adminRoutes.js';
 import { Server } from 'socket.io';
 import http from 'http';
-import teamroutes from "./Routes/teamroute.js";
-import userroutes from "./Routes/useroute.js";
-import playerroutes from "./Routes/playeroute.js";
-import budgetroutes from './Routes/BudjetRoute.js';
+
+import userroutes from "./routes/useroute.js";
+import playerroutes from "./routes/playeroute.js";
+import budgetroutes from './routes/BudjetRoute.js';
+import teamRoutes from './routes/teamRoutes.js';
+
 // Load environment variables
 dotenv.config();
+
+
 
 const app = express();
 const server = http.createServer(app);
@@ -21,9 +25,11 @@ app.use(express.json());
 // Mount admin routes
 app.use('/api/players', adminRoutes);
 app.use("/user", userroutes);
-app.use("/player", playerroutes);
-app.use("/team",teamroutes);
+app.use("/play", playerroutes);
+app.use("/team" , teamRoutes);
+
 app.use("/budget",budgetroutes);
+
 
 // Socket.IO connection
 io.on('connection', (socket) => {

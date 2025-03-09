@@ -9,7 +9,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   // Get the userId from localStorage (or your preferred method)
-  const userId = localStorage.getItem("loggedInUser") || "defaultUserId";
+  const userId = localStorage.getItem("userId") || "defaultUserId";
 
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
