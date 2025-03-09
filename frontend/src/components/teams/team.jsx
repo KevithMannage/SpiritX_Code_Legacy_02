@@ -10,7 +10,7 @@ const TeamPage = () => {
     // Fetch players based on the selected category
     const fetchPlayersByCategory = async () => {
       try {
-        const response = await fetch('http://localhost:3000/player/getplayerbycategory', {
+        const response = await fetch('http://localhost:5000/player/getplayerbycategory', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
