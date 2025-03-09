@@ -114,7 +114,7 @@ const Signup = () => {
   return (
     <div className="signup-container">
       <img className="user-icon" src="/user.png" alt="User Icon" />
-      <h2 className="signup-title">Sign Up</h2>
+      <h2 className="signup-title">Create a New Account</h2>
 
       {authError && <div className="auth-error">{authError}</div>}
 
@@ -192,11 +192,7 @@ const Signup = () => {
 
         <div className="input-group">
           <div className="input-wrapper">
-            <img
-              className="input-icon"
-              src="/email.png"
-              alt="Email Icon"
-            />
+            <img className="input-icon" src="/email.png" alt="Email Icon" />
             <input
               type="email"
               className="input-field"
