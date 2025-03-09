@@ -15,8 +15,8 @@ const Dashboard = () => {
   // Function to handle the tab switching logic
   const handleTabChange = (tab) => {
     setSelectedTab(tab);
-    if (tab === "player") {
-      navigate("/player");
+    if (tab === "playerdetails") {
+      navigate("/playerdetails");
     } else if (tab === "team") {
       navigate("/team");
     } else if (tab === "leaderboard") {
@@ -32,8 +32,8 @@ const Dashboard = () => {
         <div className="flex space-x-4">
           {/* Player Tab */}
           <button
-            onClick={() => handleTabChange("player")}
-            className={`px-4 py-2 rounded-md ${selectedTab === "player" ? "bg-blue-500 text-white" : "bg-gray-700 text-gray-300"}`}
+            onClick={() => handleTabChange("playerdetails")}
+            className={`px-4 py-2 rounded-md ${selectedTab === "playerdetails" ? "bg-blue-500 text-white" : "bg-gray-700 text-gray-300"}`}
           >
             Player
           </button>

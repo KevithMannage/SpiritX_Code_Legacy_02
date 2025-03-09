@@ -1,4 +1,4 @@
-import db from '../config/db.js';
+import db from '../Config/db.js';
 
 // Count the number of players in a user's team
 // export const countPlayersInTeam = (User_ID, callback) => {
@@ -22,7 +22,7 @@ export const countPlayersInTeam = async (userId) => {
 // Add a player to the user's team
 
 
-import { execute } from '../config/db.js'; // Adjust the path as needed
+import { execute } from '../Config/db.js'; // Adjust the path as needed
 
 // export const addPlayerToTeam = async (User_ID, Player_ID) => {
 //     console.log('Adding player:', { User_ID, Player_ID });

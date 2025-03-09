@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
  import { useNavigate } from "react-router-dom";
  
- const player = () => {
+ const playerdetails = () => {
    const [players, setPlayers] = useState([]);
    const [loading, setLoading] = useState(true);
    const [error, setError] = useState(null);
@@ -142,4 +142,4 @@ import { useEffect, useState } from "react";
    );
  };
  
- export default player;
+ export default playerdetails;
