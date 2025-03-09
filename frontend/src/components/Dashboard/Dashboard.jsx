@@ -8,6 +8,9 @@ const Dashboard = () => {
   const [newMessage, setNewMessage] = useState("");
   const navigate = useNavigate();
 
+  // Get the userId from localStorage (or your preferred method)
+  const userId = localStorage.getItem("loggedInUser") || "defaultUserId";
+
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("loggedInUser");
@@ -16,7 +19,12 @@ const Dashboard = () => {
 
   const handleTabChange = (tab) => {
     setSelectedTab(tab);
-    navigate(`/${tab}`);
+    if (tab === "team") {
+      // Navigate to the specific team page based on userId
+      navigate(`/team/${userId}`);
+    } else {
+      navigate(`/${tab}`);
+    }
   };
 
   const handleSendMessage = () => {
