@@ -18,13 +18,13 @@ const AdminDashboard = () => {
         <div className="text-2xl font-bold mb-8">Admin Dashboard</div>
         <ul>
           <li className="mb-4 hover:text-gray-400">
-            <button onClick={() => navigate("/admin/dashboard")}>Dashboard</button>
+            <button onClick={() => navigate("/players")}>Players</button>
           </li>
           <li className="mb-4 hover:text-gray-400">
-            <button onClick={() => navigate("/admin/users")}>Manage Users</button>
+            <button onClick={() => navigate("/playerstats")}>Player stats</button>
           </li>
           <li className="mb-4 hover:text-gray-400">
-            <button onClick={() => navigate("/admin/settings")}>Settings</button>
+            <button onClick={() => navigate("/tournamentsummary")}>tournamentsummary</button>
           </li>
           <li className="mb-4 hover:text-gray-400">
             <button onClick={handleLogout}>Logout</button>

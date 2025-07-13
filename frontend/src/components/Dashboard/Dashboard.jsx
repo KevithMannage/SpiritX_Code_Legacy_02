@@ -10,6 +10,9 @@ const Dashboard = () => {
 
   // Get the userId from localStorage (or your preferred method)
   const userId = localStorage.getItem("userId") || "defaultUserId";
+   const user=localStorage.getItem("username");
+   console.log(user);
+  
 
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
@@ -37,8 +40,14 @@ const Dashboard = () => {
     }
   };
 
-  return (
-    <section className="min-h-screen bg-gradient-to-br from-blue-50 via-teal-50 to-yellow-50 flex flex-col">
+  return ( 
+    <section className="min-h-screen bg-gradient-to-br from-blue-50 via-teal-50 to-yellow-50 flex flex-col"
+    style={{
+        backgroundImage: `url(./playground.jpg)`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundBlendMode: 'overlay', // Blends the gradient with the image
+      }}>
       {/* Header Section */}
       <header className="bg-gray-800 text-white p-4 flex justify-between items-center">
         <div className="text-2xl font-bold">Dashboard</div>
