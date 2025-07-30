@@ -27,7 +27,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/forgetpassword" element={<FogetPassword />} />
         <Route path="/players" element={<Players />} /> {/* Add Players route */}
-        <Route path="/playerstats" element={<PlayerStats />} />ss
+        <Route path="/playerstats" element={<PlayerStats />} />
         <Route path="/team/:User_ID" element={<TeamPage />} />
         <Route path="/team-details/:User_ID" element={<TeamDetails />} />
         <Route path="/leaderboard/:User_ID" element={<LeaderboardView />} />
