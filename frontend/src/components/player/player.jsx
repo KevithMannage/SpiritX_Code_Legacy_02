@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Navbar1 from '../../components/Dashboard/Navbar';
 
 const API_URL = 'http://localhost:5000/api/players'; // API endpoint for fetching players
 
@@ -78,11 +77,7 @@ const Players = () => {
   return (
     <>
     {/* Navbar Component */}
-      <Navbar1
-        selectedTab={selectedTab}
-        handleTabChange={handleTabChange}
-        handleLogout={handleLogout}
-      />
+     
     <div className="container mx-auto p-4 bg-gray-100 min-h-screen">
       <h1 className="text-3xl font-bold text-center mb-6">Players</h1>
 
