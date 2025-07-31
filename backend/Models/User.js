@@ -58,3 +58,13 @@ export const getUserByEmailAndPassword = (username, password) => {
     );
   });
 };
+
+
+
+export const findUserByEmailAndUsername = async (email, username) => {
+  const [rows] = await connectDB.execute(
+    "SELECT * FROM user WHERE Email = ? AND Username = ?",
+    [email, username]
+  );
+  return rows[0]; // returns undefined if not found
+};

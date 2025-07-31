@@ -1,26 +1,90 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function FogetPassword() {
+export default function ForgetPassword() {
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleBackToLogin = () => {
-    navigate("/");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    try {
+      const response = await fetch('http://localhost:5000/api/check-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, username }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.exists) {
+        navigate('/resetpassword', { state: { email, username } });
+      } else {
+        setError('User not found. Please check your details.');
+      }
+    } catch (err) {
+      setError('Something went wrong. Try again later.');
+    }
   };
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900 h-screen flex items-center justify-center">
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-lg xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-          <div className="p-8 space-y-6 md:space-y-8 sm:p-10">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Forgot Password
-            </h1>
-            <p className="text-gray-500 dark:text-gray-400">Not implemented yet</p>
-            <button onClick={handleBackToLogin} className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer">
+    <section
+      className="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center"
+      style={{
+        backgroundImage:
+          "linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkl_rWOW5qk0SL2geZYe_VoSWTsHXP-1XnSL0IR4G-1A6WeAsX-XEqypA&s')",
+      }}
+    >
+      <div className="w-full max-w-md mx-auto p-6 sm:p-8">
+        <div className="bg-gray-800 bg-opacity-90 rounded-xl shadow-xl p-8 space-y-6 transform transition-all duration-300 hover:scale-105">
+          <h1 className="text-2xl font-extrabold text-white text-center tracking-tight">
+            Forgot Password
+          </h1>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Username
+              </label>
+              <input
+                type="text"
+                required
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-colors duration-200"
+                placeholder="Enter your username"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Email
+              </label>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-colors duration-200"
+                placeholder="Enter your email"
+              />
+            </div>
+            {error && <p className="text-sm text-red-400 text-center">{error}</p>}
+            <button
+              type="submit"
+              className="w-full py-3 px-4 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 focus:outline-none transition-all duration-200"
+            >
+              Continue
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/')}
+              className="w-full py-3 px-4 bg-gray-600 text-white font-medium rounded-lg hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 focus:outline-none transition-all duration-200"
+            >
               Back to Login
             </button>
-          </div>
+          </form>
         </div>
       </div>
     </section>
