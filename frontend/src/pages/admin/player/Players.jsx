@@ -413,18 +413,18 @@
 
 // export default Players;
 
-import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
-import io from 'socket.io-client';
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
+import io from "socket.io-client";
 
-const socket = io('http://localhost:5000');
+const socket = io("http://localhost:5000");
 
 const Players = () => {
   const [players, setPlayers] = useState([]);
   const [newPlayer, setNewPlayer] = useState({
-    Name: '',
-    University: '',
-    Category: '',
+    Name: "",
+    University: "",
+    Category: "",
     Total_Runs: 0,
     Balls_Faced: 0,
     Innings_Played: 0,
@@ -437,43 +437,50 @@ const Players = () => {
 
   useEffect(() => {
     fetchPlayers();
-    socket.on('connect', () => console.log('Frontend connected to WebSocket'));
-    socket.on('disconnect', () => console.log('Frontend disconnected from WebSocket'));
-    socket.on('playerAdded', (player) => {
-      console.log('Received playerAdded:', player);
+    socket.on("connect", () => console.log("Frontend connected to WebSocket"));
+    socket.on("disconnect", () =>
+      console.log("Frontend disconnected from WebSocket")
+    );
+    socket.on("playerAdded", (player) => {
+      console.log("Received playerAdded:", player);
       setPlayers((prev) => [...prev, player]);
     });
-    socket.on('playerUpdated', (updatedPlayer) => {
-      console.log('Received playerUpdated:', updatedPlayer);
+    socket.on("playerUpdated", (updatedPlayer) => {
+      console.log("Received playerUpdated:", updatedPlayer);
       setPlayers((prev) =>
-        prev.map((p) => (p.Player_ID === updatedPlayer.Player_ID ? updatedPlayer : p))
+        prev.map((p) =>
+          p.Player_ID === updatedPlayer.Player_ID ? updatedPlayer : p
+        )
       );
     });
-    socket.on('playerDeleted', ({ Player_ID }) => {
-      console.log('Received playerDeleted:', { Player_ID });
+    socket.on("playerDeleted", ({ Player_ID }) => {
+      console.log("Received playerDeleted:", { Player_ID });
       setPlayers((prev) => prev.filter((p) => p.Player_ID !== Player_ID));
     });
     return () => {
-      socket.off('connect');
-      socket.off('disconnect');
-      socket.off('playerAdded');
-      socket.off('playerUpdated');
-      socket.off('playerDeleted');
+      socket.off("connect");
+      socket.off("disconnect");
+      socket.off("playerAdded");
+      socket.off("playerUpdated");
+      socket.off("playerDeleted");
     };
   }, [players]);
 
   useEffect(() => {
     if (editPlayer && editFormRef.current) {
-      editFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      editFormRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }
   }, [editPlayer]);
 
   const fetchPlayers = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/players');
+      const response = await axios.get("http://localhost:5000/api/players");
       setPlayers(response.data);
     } catch (error) {
-      console.error('Error fetching players:', error);
+      console.error("Error fetching players:", error);
     }
   };
 
@@ -490,11 +497,11 @@ const Players = () => {
   const addPlayer = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/players', newPlayer);
+      await axios.post("http://localhost:5000/api/players", newPlayer);
       setNewPlayer({
-        Name: '',
-        University: '',
-        Category: '',
+        Name: "",
+        University: "",
+        Category: "",
         Total_Runs: 0,
         Balls_Faced: 0,
         Innings_Played: 0,
@@ -503,7 +510,7 @@ const Players = () => {
         Runs_Conceded: 0,
       });
     } catch (error) {
-      console.error('Error adding player:', error);
+      console.error("Error adding player:", error);
     }
   };
 
@@ -514,10 +521,13 @@ const Players = () => {
   const updatePlayer = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/api/players/${editPlayer.Player_ID}`, editPlayer);
+      await axios.put(
+        `http://localhost:5000/api/players/${editPlayer.Player_ID}`,
+        editPlayer
+      );
       setEditPlayer(null);
     } catch (error) {
-      console.error('Error updating player:', error);
+      console.error("Error updating player:", error);
     }
   };
 
@@ -525,26 +535,33 @@ const Players = () => {
     try {
       await axios.delete(`http://localhost:5000/api/players/${id}`);
     } catch (error) {
-      console.error('Error deleting player:', error);
+      console.error("Error deleting player:", error);
       if (error.response && error.response.status === 409) {
         alert(error.response.data.error);
       } else if (error.response && error.response.status === 500) {
-        alert('Cannot delete, the player is already in a team.');
+        alert("Cannot delete, the player is already in a team.");
       }
     }
   };
 
   return (
-    <div className="container mx-auto p-6 bg-gradient-to-br from-teal-50 via-blue-50 to-indigo-50 min-h-screen">
-      <h2 className="text-3xl font-extrabold text-indigo-700 mb-6 text-center">Players Management</h2>
+    <div className="container mx-auto p-6  min-h-screen">
+      <h2 className="text-3xl font-extrabold text-blue-400 !text-blue-400 mb-6 text-center">
+        Players Management
+      </h2>
 
       {/* Add Player Form */}
-      <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-6 mb-8 border border-indigo-100">
-        <h3 className="text-xl font-semibold text-teal-600 mb-4">Add New Player</h3>
+      <div className="bg-gray-800 backdrop-blur-sm rounded-xl shadow-xl p-6 mb-8 border border-gray-500">
+        <h3 className="text-xl font-bold text-gray-300 mb-4 drop-shadow-md [text-shadow:_1px_1px_2px_black]">
+          Add New Player
+        </h3>
+
         <form onSubmit={addPlayer} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Name</label>
+              <label className="block text-sm font-medium text-gray-400">
+                Name
+              </label>
               <input
                 name="Name"
                 value={newPlayer.Name}
@@ -555,7 +572,9 @@ const Players = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">University</label>
+              <label className="block text-sm font-medium text-gray-400">
+                University
+              </label>
               <input
                 name="University"
                 value={newPlayer.University}
@@ -566,7 +585,9 @@ const Players = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Category</label>
+              <label className="block text-sm font-medium text-gray-400">
+                Category
+              </label>
               <select
                 name="Category"
                 value={newPlayer.Category}
@@ -580,7 +601,9 @@ const Players = () => {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Total Runs</label>
+              <label className="block text-sm font-medium text-gray-400">
+                Total Runs
+              </label>
               <input
                 type="number"
                 name="Total_Runs"
@@ -591,7 +614,9 @@ const Players = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Balls Faced</label>
+              <label className="block text-sm font-medium text-gray-400">
+                Balls Faced
+              </label>
               <input
                 type="number"
                 name="Balls_Faced"
@@ -602,7 +627,9 @@ const Players = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Innings Played</label>
+              <label className="block text-sm font-medium text-gray-400">
+                Innings Played
+              </label>
               <input
                 type="number"
                 name="Innings_Played"
@@ -613,7 +640,9 @@ const Players = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Wickets</label>
+              <label className="block text-sm font-medium text-gray-400">
+                Wickets
+              </label>
               <input
                 type="number"
                 name="Wickets"
@@ -624,7 +653,9 @@ const Players = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Overs Bowled</label>
+              <label className="block text-sm font-medium text-gray-400">
+                Overs Bowled
+              </label>
               <input
                 type="number"
                 name="Overs_Bowled"
@@ -635,7 +666,9 @@ const Players = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Runs Conceded</label>
+              <label className="block text-sm font-medium text-gray-400">
+                Runs Conceded
+              </label>
               <input
                 type="number"
                 name="Runs_Conceded"
@@ -661,11 +694,15 @@ const Players = () => {
           ref={editFormRef}
           className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-6 mb-8 border border-indigo-100"
         >
-          <h3 className="text-xl font-semibold text-indigo-600 mb-4">Edit Player</h3>
+          <h3 className="text-xl font-semibold text-indigo-600 mb-4">
+            Edit Player
+          </h3>
           <form onSubmit={updatePlayer} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Name</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Name
+                </label>
                 <input
                   name="Name"
                   value={editPlayer.Name}
@@ -676,7 +713,9 @@ const Players = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">University</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  University
+                </label>
                 <input
                   name="University"
                   value={editPlayer.University}
@@ -687,7 +726,9 @@ const Players = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Category</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Category
+                </label>
                 <select
                   name="Category"
                   value={editPlayer.Category}
@@ -701,7 +742,9 @@ const Players = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Total Runs</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Total Runs
+                </label>
                 <input
                   type="number"
                   name="Total_Runs"
@@ -712,7 +755,9 @@ const Players = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Balls Faced</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Balls Faced
+                </label>
                 <input
                   type="number"
                   name="Balls_Faced"
@@ -723,7 +768,9 @@ const Players = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Innings Played</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Innings Played
+                </label>
                 <input
                   type="number"
                   name="Innings_Played"
@@ -734,7 +781,9 @@ const Players = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Wickets</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Wickets
+                </label>
                 <input
                   type="number"
                   name="Wickets"
@@ -745,7 +794,9 @@ const Players = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Overs Bowled</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Overs Bowled
+                </label>
                 <input
                   type="number"
                   name="Overs_Bowled"
@@ -756,7 +807,9 @@ const Players = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Runs Conceded</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Runs Conceded
+                </label>
                 <input
                   type="number"
                   name="Runs_Conceded"
@@ -792,32 +845,77 @@ const Players = () => {
           <table className="min-w-full divide-y divide-indigo-200">
             <thead className="bg-indigo-100">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">ID</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">Name</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">University</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">Category</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">Total Runs</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">Balls Faced</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">Innings Played</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">Wickets</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">Overs Bowled</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">Runs Conceded</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">Actions</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                  ID
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                  Name
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                  University
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                  Category
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                  Total Runs
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                  Balls Faced
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                  Innings Played
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                  Wickets
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                  Overs Bowled
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                  Runs Conceded
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-indigo-100">
               {players.map((player) => (
-                <tr key={player.Player_ID} className="hover:bg-teal-50 transition-all duration-200">
-                  <td className="px-4 py-3 text-sm text-gray-800">{player.Player_ID}</td>
-                  <td className="px-4 py-3 text-sm text-gray-800">{player.Name}</td>
-                  <td className="px-4 py-3 text-sm text-gray-800">{player.University}</td>
-                  <td className="px-4 py-3 text-sm text-gray-800">{player.Category}</td>
-                  <td className="px-4 py-3 text-sm text-gray-800">{player.Total_Runs}</td>
-                  <td className="px-4 py-3 text-sm text-gray-800">{player.Balls_Faced}</td>
-                  <td className="px-4 py-3 text-sm text-sm text-gray-800">{player.Innings_Played}</td>
-                  <td className="px-4 py-3 text-sm text-gray-800">{player.Wickets}</td>
-                  <td className="px-4 py-3 text-sm text-gray-800">{player.Overs_Bowled}</td>
-                  <td className="px-4 py-3 text-sm text-gray-800">{player.Runs_Conceded}</td>
+                <tr
+                  key={player.Player_ID}
+                  className="hover:bg-teal-50 transition-all duration-200"
+                >
+                  <td className="px-4 py-3 text-sm text-gray-800">
+                    {player.Player_ID}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-800">
+                    {player.Name}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-800">
+                    {player.University}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-800">
+                    {player.Category}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-800">
+                    {player.Total_Runs}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-800">
+                    {player.Balls_Faced}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-sm text-gray-800">
+                    {player.Innings_Played}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-800">
+                    {player.Wickets}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-800">
+                    {player.Overs_Bowled}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-800">
+                    {player.Runs_Conceded}
+                  </td>
                   <td className="px-4 py-3 text-sm flex space-x-2">
                     <button
                       onClick={() => startEdit(player)}
