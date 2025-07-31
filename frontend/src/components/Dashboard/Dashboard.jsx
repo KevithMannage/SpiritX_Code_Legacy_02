@@ -169,8 +169,7 @@
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar1 from "./Navbar"; // Ensure the file name matches your actual Navbar1 component
-
+import Navbar from "../Navbar";
 const Dashboard = () => {
   const [username, setUsername] = useState("");
   const [selectedTab, setSelectedTab] = useState("profile");
@@ -187,26 +186,7 @@ const Dashboard = () => {
     setUsername(user);
   }, [user]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("loggedInUser");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("username");
-    navigate("/");
-  };
 
-  const handleTabChange = (tab) => {
-    setSelectedTab(tab);
-    if (tab === "team") {
-      navigate(`/team/${userId}`);
-    } else if (tab === "team-details") {
-      navigate(`/team-details/${userId}`);
-    } else if (tab === "leaderboard") {
-      navigate(`/leaderboard/${userId}`);
-    } else {
-      navigate(`/${tab}`);
-    }
-  };
 
   const handleSendMessage = () => {
     if (newMessage.trim() !== "") {
@@ -226,11 +206,6 @@ const Dashboard = () => {
       }}
     >
       {/* Navbar Component */}
-      <Navbar1
-        selectedTab={selectedTab}
-        handleTabChange={handleTabChange}
-        handleLogout={handleLogout}
-      />
 
       {/* Main Content */}
       <div className="flex-1 flex items-center justify-center px-6 py-8 mx-auto">
