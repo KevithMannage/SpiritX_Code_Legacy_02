@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const API_URL = 'http://localhost:5000'; // Base URL without /api
 
@@ -31,7 +32,9 @@ const SelectYourTeam = () => {
   const [budget, setBudget] = useState({ remaining: 9000000, spent: 0 });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const userId = localStorage.getItem('userId') || '1';
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchTeam();
@@ -127,103 +130,127 @@ const SelectYourTeam = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('userId');
+    navigate('/login');
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   const isPlayerInTeam = (playerId) => {
     return team.some((teamPlayer) => teamPlayer.Player_ID === playerId);
   };
 
   return (
-    <div className="container mx-auto p-4 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold text-center mb-6">Select Your Team</h1>
+    <div className="min-h-screen bg-gray-900 text-gray-100">
+      {/* Navbar */}
+  
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-gray-800 p-8 rounded-xl shadow-lg border-2 border-blue-900">
+          <h1 className="text-4xl font-bold text-blue-400 mb-6">Select Your Team</h1>
 
-      <div className="mb-4 p-4 bg-white rounded-lg shadow">
-        <h2 className="text-xl font-semibold">Team Status</h2>
-        <p>Remaining Budget: Rs. {budget.remaining.toLocaleString()}</p>
-        <p>Spent: Rs. {budget.spent.toLocaleString()}</p>
-        <p>Players Selected: {team.length}/11</p>
-        {team.length >= 11 && (
-          <p className="text-red-500 mt-2">Team complete! Maximum 11 players reached.</p>
-        )}
-      </div>
-
-      <div className="mb-4">
-        <label className="block text-lg font-medium mb-2">Select Category:</label>
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          disabled={loading}
-        >
-          <option value="Batsman">Batsman</option>
-          <option value="All-Rounder">All-Rounder</option>
-          <option value="Bowler">Bowler</option>
-        </select>
-        <button
-          onClick={loadPlayers}
-          className={`mt-2 w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 ${
-            loading ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
-          disabled={loading}
-        >
-          {loading ? 'Loading...' : 'Load Players'}
-        </button>
-      </div>
-
-      {error && (
-        <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">{error}</div>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-        {players.map((player) => {
-          const isAdded = isPlayerInTeam(player.Player_ID);
-          return (
-            <div key={player.Player_ID} className="p-4 bg-white rounded-lg shadow">
-              <p className="font-medium">{player.Name} ({player.University})</p>
-              <p>Value: Rs. {player.Value.toLocaleString()}</p>
-              <button
-                onClick={() => !isAdded && addPlayer(player.Player_ID, player.Value)}
-                className={`mt-2 w-full px-4 py-2 text-white rounded ${
-                  isAdded
-                    ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-green-500 hover:bg-green-600'
-                } ${loading || team.length >= 11 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                disabled={loading || team.length >= 11 || isAdded}
-              >
-                {isAdded ? 'Player Added' : 'Add to Team'}
-              </button>
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="bg-white p-4 rounded-lg shadow">
-        <h2 className="text-xl font-semibold mb-4">Your Team</h2>
-        {team.length === 0 ? (
-          <p className="text-gray-500">No players selected yet.</p>
-        ) : (
-          <div className="space-y-2">
-            {team.map((player) => (
-              <div
-                key={player.Player_ID}
-                className="flex justify-between items-center p-2 bg-gray-100 rounded"
-              >
-                <span>
-                  {player.Name} ({player.University}) - Rs.{' '}
-                  {player.Purchased_Price.toLocaleString()}
-                </span>
-                <button
-                  onClick={() => removePlayer(player.Player_ID)}
-                  className={`px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 ${
-                    loading ? 'opacity-50 cursor-not-allowed' : ''
-                  }`}
-                  disabled={loading}
-                >
-                  Remove
-                </button>
-              </div>
-            ))}
+          <div className="mb-6 p-6 bg-gray-700 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold text-blue-400 mb-2">Team Status</h2>
+            <p className="text-gray-300">Remaining Budget: Rs. {budget.remaining.toLocaleString()}</p>
+            <p className="text-gray-300">Spent: Rs. {budget.spent.toLocaleString()}</p>
+            <p className="text-gray-300">Players Selected: {team.length}/11</p>
+            {team.length >= 11 && (
+              <p className="text-red-500 mt-2">Team complete! Maximum 11 players reached.</p>
+            )}
           </div>
-        )}
+
+          <div className="mb-6">
+            <label className="block text-lg font-medium text-gray-300 mb-2">Select Category:</label>
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="w-full p-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-100"
+              disabled={loading}
+            >
+              <option value="Batsman">Batsman</option>
+              <option value="All-Rounder">All-Rounder</option>
+              <option value="Bowler">Bowler</option>
+            </select>
+            <button
+              onClick={loadPlayers}
+              className={`mt-2 w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 ${
+                loading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+              disabled={loading}
+            >
+              {loading ? 'Loading...' : 'Load Players'}
+            </button>
+          </div>
+
+          {error && (
+            <div className="mb-6 p-4 bg-red-900 text-red-200 rounded-lg text-center">
+              {error}
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+            {players.map((player) => {
+              const isAdded = isPlayerInTeam(player.Player_ID);
+              return (
+                <div key={player.Player_ID} className="p-6 bg-gray-700 rounded-lg shadow-md hover:shadow-xl transition duration-300">
+                  <p className="font-medium text-blue-400">{player.Name} ({player.University})</p>
+                  <p className="text-gray-300">Value: Rs. {player.Value.toLocaleString()}</p>
+                  <button
+                    onClick={() => !isAdded && addPlayer(player.Player_ID, player.Value)}
+                    className={`mt-2 w-full px-4 py-2 text-white rounded-lg transition duration-300 ${
+                      isAdded
+                        ? 'bg-gray-600 cursor-not-allowed'
+                        : 'bg-green-600 hover:bg-green-700'
+                    } ${loading || team.length >= 11 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    disabled={loading || team.length >= 11 || isAdded}
+                  >
+                    {isAdded ? 'Player Added' : 'Add to Team'}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="bg-gray-700 p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold text-blue-400 mb-4">Your Team</h2>
+            {team.length === 0 ? (
+              <p className="text-gray-300">No players selected yet.</p>
+            ) : (
+              <div className="space-y-2">
+                {team.map((player) => (
+                  <div
+                    key={player.Player_ID}
+                    className="flex justify-between items-center p-2 bg-gray-600 rounded-lg"
+                  >
+                    <span className="text-gray-300">
+                      {player.Name} ({player.University}) - Rs.{' '}
+                      {player.Purchased_Price.toLocaleString()}
+                    </span>
+                    <button
+                      onClick={() => removePlayer(player.Player_ID)}
+                      className={`px-2 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-300 ${
+                        loading ? 'opacity-50 cursor-not-allowed' : ''
+                      }`}
+                      disabled={loading}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
+
+      <footer className="bg-gradient-to-r from-blue-900 to-black text-white p-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p>&copy; 2025 Cricket Players Dashboard. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 };
