@@ -14,7 +14,8 @@ const AdminDashboard = () => {
             Welcome, {username}!
           </h1>
           <p className="text-lg text-gray-300 mb-6">
-            You are logged in as an administrator. Use the navigation bar to explore different sections.
+            You are logged in as an administrator. Use the navigation bar to
+            explore different sections.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-gray-700 p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300">
@@ -30,7 +31,9 @@ const AdminDashboard = () => {
               </button>
             </div>
             <div className="bg-gray-700 p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300">
-              <h2 className="text-xl font-semibold text-blue-400">Player Stats</h2>
+              <h2 className="text-xl font-semibold text-blue-400">
+                Player Stats
+              </h2>
               <p className="mt-2 text-gray-300">
                 View and analyze player statistics.
               </p>
@@ -42,7 +45,9 @@ const AdminDashboard = () => {
               </button>
             </div>
             <div className="bg-gray-700 p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300">
-              <h2 className="text-xl font-semibold text-blue-400">Tournaments</h2>
+              <h2 className="text-xl font-semibold text-blue-400">
+                Tournaments
+              </h2>
               <p className="mt-2 text-gray-300">
                 Check tournament summaries and details.
               </p>
