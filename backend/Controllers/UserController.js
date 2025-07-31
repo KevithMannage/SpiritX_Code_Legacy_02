@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import { getUserByEmailAndPassword } from '../Models/User.js';
 import { getUserByUsername } from '../Models/User.js';
+import {findUserByEmailAndUsername} from '../Models/User.js';
 
 import jwt from 'jsonwebtoken'; // Import jsonwebtoken
 dotenv.config();
@@ -106,5 +107,78 @@ export const loginUser = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send('Failed to log in');
+  }
+};
+
+
+
+
+export const forgetpassword = async (req, res) => {
+  const { username, email } = req.body;
+
+  if (!username || !email) {
+    return res.status(400).send('Missing required parameters: username and email ');
+  }
+
+  try {
+    // Retrieve the user from the database based on username
+    const user = await  getUserByUsername(username);
+    console.log('User from database:', user);
+    if (user) {
+      console.log('User from database:', user);
+
+      // Compare the provided password with the hashed password in the database
+      const isPasswordValid = await bcrypt.compare(password, user.Password);
+
+      if (isPasswordValid) {
+        // Passwords match, generate the JWT access token
+        const accessToken = jwt.sign(
+          { username: user.username },
+          process.env.JWT_SECRET_KEY,
+          { expiresIn: '12h' }
+        );
+
+        // Generate the refresh token with 30 days expiration
+        const refreshToken = jwt.sign(
+          { username: user.username },
+          process.env.JWT_REFRESH_SECRET_KEY, 
+          { expiresIn: '30d' }
+        );
+
+        res.status(200).json({ user, accessToken, refreshToken });
+      } else {
+        // Invalid password
+        res.status(401).send('Invalid username or password');
+      }
+    } else {
+      // User not found
+      res.status(401).send('Invalid username or password');
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Failed to log in');
+  }
+};
+
+
+
+ export const verifyUserIdentity = async (req, res) => {
+  const { email, username } = req.body;
+
+  if (!email || !username) {
+    return res.status(400).json({ error: "Email and Username are required" });
+  }
+
+  try {
+    const user = await findUserByEmailAndUsername(email, username);
+
+    if (user) {
+      res.json({ exists: true, message: "User found" });
+    } else {
+      res.status(404).json({ exists: false, message: "User not found" });
+    }
+  } catch (err) {
+    console.error("DB error:", err);
+    res.status(500).json({ error: "Server error" });
   }
 };

@@ -17,7 +17,6 @@ const Navbar = () => {
     { name: "Dashboard", path: "/dashboard" },
     { name: "Player", path: "/playerdetails" },
     { name: "Select Your Team", path: `/team/${userId}` },
-    { name: "Team", path: `/team/${userId}` },
     { name: "Leaderboard", path: `/leaderboard/${userId}` },
     { name: "Budget", path: "/budget" },
     { name: "Chatbot", path: "/chatbot" },
