@@ -111,21 +111,26 @@ const Signup = () => {
     }
   };
 
-  return (
-    <div className="signup-container">
-      <img className="user-icon" src="/user.png" alt="User Icon" />
-      <h2 className="signup-title">Create a New Account</h2>
+return (
+  <section
+    className="min-h-screen flex items-center justify-center bg-gray-900 bg-cover bg-center bg-no-repeat"
+    style={{
+      backgroundImage: "url('/login.jpg')",
+    }}
+  >
+    <div className="signup-container bg-white bg-opacity-90 p-8 rounded-lg shadow-lg w-full max-w-md">
+      <img className="user-icon mx-auto" src="/user.png" alt="User Icon" />
+      <h2 className="signup-title text-center text-2xl font-semibold my-4">
+        Create a New Account
+      </h2>
 
       {authError && <div className="auth-error">{authError}</div>}
 
       <form onSubmit={handleSubmit}>
+        {/* Username */}
         <div className="input-group">
           <div className="input-wrapper">
-            <img
-              className="input-icon"
-              src="/user Input.png"
-              alt="User-Input Icon"
-            />
+            <img className="input-icon" src="/user Input.png" alt="User-Input Icon" />
             <input
               type="text"
               className="input-field"
@@ -137,13 +142,10 @@ const Signup = () => {
           {errors.username && <div className="error">{errors.username}</div>}
         </div>
 
+        {/* Password */}
         <div className="input-group">
           <div className="input-wrapper">
-            <img
-              className="input-icon"
-              src="/padlock.png"
-              alt="Password Icon"
-            />
+            <img className="input-icon" src="/padlock.png" alt="Password Icon" />
             <input
               type={showPassword ? "text" : "password"}
               className="input-field"
@@ -164,13 +166,10 @@ const Signup = () => {
           )}
         </div>
 
+        {/* Confirm Password */}
         <div className="input-group">
           <div className="input-wrapper">
-            <img
-              className="input-icon"
-              src="/padlock.png"
-              alt="Password Icon"
-            />
+            <img className="input-icon" src="/padlock.png" alt="Password Icon" />
             <input
               type={showConfirmPassword ? "text" : "password"}
               className="input-field"
@@ -179,9 +178,7 @@ const Signup = () => {
               placeholder="Confirm Password"
             />
             <span
-              className={`eye-icon ${
-                showConfirmPassword ? "eye-open" : "eye-closed"
-              }`}
+              className={`eye-icon ${showConfirmPassword ? "eye-open" : "eye-closed"}`}
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
             ></span>
           </div>
@@ -190,6 +187,7 @@ const Signup = () => {
           )}
         </div>
 
+        {/* Email */}
         <div className="input-group">
           <div className="input-wrapper">
             <img className="input-icon" src="/email.png" alt="Email Icon" />
@@ -204,12 +202,27 @@ const Signup = () => {
           {errors.email && <div className="error">{errors.email}</div>}
         </div>
 
-        <button type="submit" className="signup-button">
+        {/* Submit */}
+        <button type="submit" className="signup-button w-full mt-4">
           Sign Up
         </button>
+        <div className="mt-4 text-center">
+  <p className="text-sm text-gray-400 text-center">
+                Already have an account?{" "}
+                <button
+                  onClick={() => navigate("/")}
+                  className="text-blue-400 hover:underline hover:text-blue-300"
+                >
+                  Sign in
+                </button>
+              </p>
+</div>
+
       </form>
     </div>
-  );
+  </section>
+);
+
 };
 
 export default Signup;
