@@ -546,7 +546,7 @@ const Players = () => {
 
   return (
     <div className="container mx-auto p-6  min-h-screen">
-      <h2 className="text-4xl font-extrabold text-blue-400 !text-blue-400 mb-6  pb-5 text-center">
+      <h2 className="text-4xl font-extrabold text-blue-400 mb-6  pb-5 text-center">
         Players Management
       </h2>
 
@@ -845,37 +845,37 @@ const Players = () => {
           <table className="min-w-full divide-y divide-indigo-200">
             <thead className="bg-indigo-100">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                <th className="px-4 py-4 text-left bg-gray-600 text-xs font-medium  text-blue-100 uppercase tracking-wider  border border-gray-300">
                   ID
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                <th className="px-4 py-4 text-left bg-gray-600 text-xs font-medium text-blue-100 uppercase tracking-wider  border border-gray-300">
                   Name
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                <th className="px-4 py-4 text-left bg-gray-600 text-xs font-medium text-blue-100 uppercase tracking-wider border border-gray-300">
                   University
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                <th className="px-4 py-4 text-left bg-gray-600 text-xs font-medium text-blue-100 uppercase tracking-wider border border-gray-300">
                   Category
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                <th className="px-4 py-4 text-left bg-gray-600 text-xs font-medium text-blue-100 uppercase tracking-wider  border border-gray-300">
                   Total Runs
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                <th className="px-4 py-4 text-left bg-gray-600 text-xs font-medium text-blue-100 uppercase tracking-wider  border border-gray-300">
                   Balls Faced
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                <th className="px-4 py-4 text-left bg-gray-600 text-xs font-medium text-blue-100 uppercase tracking-wider border border-gray-300">
                   Innings Played
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                <th className="px-4 py-4 text-left bg-gray-600 text-xs font-medium text-blue-100 uppercase tracking-wider  border border-gray-300">
                   Wickets
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                <th className="px-4 py-4 text-left bg-gray-600 text-xs font-medium text-blue-100 uppercase tracking-wider border border-gray-300">
                   Overs Bowled
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                <th className="px-4 py-4 text-left bg-gray-600 text-xs font-medium text-blue-100 uppercase tracking-wider border border-gray-300">
                   Runs Conceded
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                <th className="px-4 py-4 text-left bg-gray-600 text-xs font-medium text-blue-100 uppercase tracking-wider border border-gray-300">
                   Actions
                 </th>
               </tr>
@@ -886,37 +886,37 @@ const Players = () => {
                   key={player.Player_ID}
                   className="hover:bg-teal-50 transition-all duration-200"
                 >
-                  <td className="px-4 py-3 text-sm text-gray-800">
+                  <td className="px-4 py-3 text-sm text-gray-800  border border-gray-600">
                     {player.Player_ID}
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-800">
+                  <td className="px-4 py-3 text-sm text-gray-800 border border-gray-600">
                     {player.Name}
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-800">
+                  <td className="px-4 py-3 text-sm text-gray-800 border border-gray-600">
                     {player.University}
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-800">
+                  <td className="px-4 py-3 text-sm text-gray-800 border border-gray-600">
                     {player.Category}
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-800">
+                  <td className="px-4 py-3 text-sm text-gray-800 border border-gray-600">
                     {player.Total_Runs}
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-800">
+                  <td className="px-4 py-3 text-sm text-gray-800 border border-gray-600">
                     {player.Balls_Faced}
                   </td>
-                  <td className="px-4 py-3 text-sm text-sm text-gray-800">
+                  <td className="px-4 py-3 text-sm text-gray-800 border border-gray-600">
                     {player.Innings_Played}
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-800">
+                  <td className="px-4 py-3 text-sm text-gray-800 border border-gray-600">
                     {player.Wickets}
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-800">
+                  <td className="px-4 py-3 text-sm text-gray-800 border border-gray-600">
                     {player.Overs_Bowled}
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-800">
+                  <td className="px-4 py-3 text-sm text-gray-800 border border-gray-600">
                     {player.Runs_Conceded}
                   </td>
-                  <td className="px-4 py-3 text-sm flex space-x-2">
+                  <td className="px-4 py-3 text-sm flex space-x-2  border border-gray-600">
                     <button
                       onClick={() => startEdit(player)}
                       className="bg-yellow-400 text-white py-2 px-4 rounded-lg hover:bg-yellow-500 transition-all duration-300"
