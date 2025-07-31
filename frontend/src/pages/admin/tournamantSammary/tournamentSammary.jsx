@@ -1,16 +1,16 @@
 // src/components/TopPerformers.js
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import io from 'socket.io-client';
-import './tournamentSammary.css'
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import io from "socket.io-client";
+import "./tournamentSammary.css";
 
-const socket = io('http://localhost:5000'); // Connect to your server
+const socket = io("http://localhost:5000"); // Connect to your server
 
 const TopPerformers = () => {
   const [topPerformers, setTopPerformers] = useState({
     topRunScorers: [],
     topWicketTakers: [],
-    totalRunsAndWickets: []
+    totalRunsAndWickets: [],
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -19,11 +19,13 @@ const TopPerformers = () => {
     // Initial fetch
     const fetchTopPerformers = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/players/top');
+        const response = await axios.get(
+          "http://localhost:5000/api/players/top"
+        );
         setTopPerformers(response.data.data);
         setLoading(false);
       } catch (err) {
-        setError('Failed to fetch top performers');
+        setError("Failed to fetch top performers");
         setLoading(false);
       }
     };
@@ -31,13 +33,13 @@ const TopPerformers = () => {
     fetchTopPerformers();
 
     // Socket.IO listener
-    socket.on('topPerformersUpdated', (data) => {
+    socket.on("topPerformersUpdated", (data) => {
       setTopPerformers(data);
     });
 
     // Cleanup
     return () => {
-      socket.off('topPerformersUpdated');
+      socket.off("topPerformersUpdated");
     };
   }, []);
 
@@ -46,9 +48,10 @@ const TopPerformers = () => {
 
   return (
     <div className="top-performers-container">
+      <h1 className=" top-performers-title">Top Performers</h1>
       <div className="performers-section">
-        <h2>Top Run Scorer</h2>
-        <table>
+        <h2 className="section-title">Top Run Scorer</h2>
+        <table className="performers-table">
           <thead>
             <tr>
               <th>Name</th>
@@ -67,8 +70,8 @@ const TopPerformers = () => {
       </div>
 
       <div className="performers-section">
-        <h2>Top Wicket Taker</h2>
-        <table>
+        <h2 className="section-title">Top Wicket Taker</h2>
+        <table className="performers-table">
           <thead>
             <tr>
               <th>Name</th>
@@ -87,8 +90,8 @@ const TopPerformers = () => {
       </div>
 
       <div className="performers-section">
-        <h2>Overall Stats</h2>
-        <table>
+        <h2 className="section-title">Overall Stats</h2>
+        <table className="performers-table">
           <thead>
             <tr>
               <th>Total Runs</th>
