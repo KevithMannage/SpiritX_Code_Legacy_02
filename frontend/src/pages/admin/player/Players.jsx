@@ -546,7 +546,7 @@ const Players = () => {
 
   return (
     <div className="container mx-auto p-6  min-h-screen">
-      <h2 className="text-3xl font-extrabold text-blue-400 !text-blue-400 mb-6 text-center">
+      <h2 className="text-4xl font-extrabold text-blue-400 !text-blue-400 mb-6  pb-5 text-center">
         Players Management
       </h2>
 
@@ -568,7 +568,7 @@ const Players = () => {
                 onChange={handleInputChange}
                 placeholder="Enter name"
                 required
-                className="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-teal-400 transition-all bg-white text-gray-800"
+                className="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-teal-400 transition-all bg-white text-gray-800 placeholder-gray-600"
               />
             </div>
             <div>
@@ -581,7 +581,7 @@ const Players = () => {
                 onChange={handleInputChange}
                 placeholder="Enter university"
                 required
-                className="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-teal-400 transition-all bg-white text-gray-800"
+                className="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-teal-400 transition-all bg-white text-gray-800 placeholder-gray-600"
               />
             </div>
             <div>
@@ -592,7 +592,7 @@ const Players = () => {
                 name="Category"
                 value={newPlayer.Category}
                 onChange={handleInputChange}
-                className="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-teal-400 transition-all bg-white text-gray-800"
+                className="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-teal-400 transition-all bg-white text-gray-800 "
               >
                 <option value="">Select Category</option>
                 <option value="Batsman">Batsman</option>
