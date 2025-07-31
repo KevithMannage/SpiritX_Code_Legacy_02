@@ -17,7 +17,7 @@ import TeamDetails from './components/teams/teamDetails';
 import Navbar from './components/Navbar';
 import { Outlet } from 'react-router-dom';
 import LightRaysBackground from './components/LightRaysBackground';
-
+import AdminNavbar from './adminnavbar';
 const MainLayout = () => {
   return (
     <>
@@ -32,29 +32,48 @@ const MainLayout = () => {
 };
 
 
+const DashLayout = () => {
+  return (
+    <>
+     <LightRaysBackground />
+      <AdminNavbar />
+
+      <div className="pt-4 px-4">
+        <Outlet />
+      </div>
+    </>
+  );
+};
+
+
 function App() {
   return (
     <Router>
       <Routes>
         {/* Public routes without Navbar */}
+         <Route element={<DashLayout />}>
         <Route path="/signup" element={<Signup />} />
-        <Route path="/" element={<Login />} />
         <Route path="/forgetpassword" element={<FogetPassword />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/tournamentSummary" element={<TopPerformers />} />
+        <Route path="/players" element={<Players />} />
+        <Route path="/playerstats" element={<PlayerStats />} />
+        </Route>
+
+
 
         {/* Protected routes with Navbar */}
         <Route element={<MainLayout />}>
           <Route path="/playerdetails" element={<Playerdetails />} />
           <Route path="/budget" element={<Budget />} />
           <Route path="/chatbot" element={<Chatbox />} />
-          <Route path="/players" element={<Players />} />
-          <Route path="/playerstats" element={<PlayerStats />} />
           <Route path="/team/:User_ID" element={<TeamPage />} />
           <Route path="/team-details/:User_ID" element={<TeamDetails />} />
           <Route path="/leaderboard/:User_ID" element={<LeaderboardView />} />
           <Route path="/dashboard" element={<Dashboard />} />
+         
         </Route>
+         <Route path="/" element={<Login />} />
       </Routes>
     </Router>
   );
