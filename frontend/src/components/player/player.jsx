@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
 
-const API_URL = 'http://localhost:5000/api/players'; // API endpoint for fetching players
+const API_URL = 'http://localhost:5000/api/players';
 
 const Players = () => {
   const [players, setPlayers] = useState([]);
+  const [filteredPlayers, setFilteredPlayers] = useState([]);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
-  const [selectedTab, setSelectedTab] = useState("profile");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('All');
+  const [sortField, setSortField] = useState('Name');
+  const [sortOrder, setSortOrder] = useState('asc');
 
-  // Simulate authentication check (assuming userId is stored in localStorage after login)
   const userId = localStorage.getItem('userId');
-  const isAuthenticated = !!userId; // Simple check for demo; adjust based on your auth system
+  const isAuthenticated = !!userId;
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -27,12 +30,36 @@ const Players = () => {
       if (!response.ok) throw new Error('Failed to fetch players');
       const data = await response.json();
       setPlayers(data);
+      setFilteredPlayers(data);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    let result = [...players];
+    if (searchTerm) {
+      result = result.filter(
+        (player) =>
+          player.Name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          player.University.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    if (categoryFilter !== 'All') {
+      result = result.filter((player) => player.Category === categoryFilter);
+    }
+    result.sort((a, b) => {
+      const fieldA = a[sortField];
+      const fieldB = b[sortField];
+      if (typeof fieldA === 'string') {
+        return sortOrder === 'asc' ? fieldA.localeCompare(fieldB) : fieldB.localeCompare(fieldA);
+      }
+      return sortOrder === 'asc' ? fieldA - fieldB : fieldB - fieldA;
+    });
+    setFilteredPlayers(result);
+  }, [searchTerm, categoryFilter, sortField, sortOrder, players]);
 
   const handlePlayerClick = (player) => {
     setSelectedPlayer(player);
@@ -44,95 +71,123 @@ const Players = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="container mx-auto p-4 bg-gray-100 min-h-screen">
-        <h1 className="text-3xl font-bold text-center mb-6">Players</h1>
-        <p className="text-red-500 text-center">Please log in to view players.</p>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">Cricket Players Dashboard</h1>
+          <p className="text-red-500 text-lg">Please log in to view players.</p>
+        </div>
       </div>
     );
   }
 
- const handleTabChange = (tab) => {
-    setSelectedTab(tab);
-    if (tab === "team") {
-      navigate(`/team/${userId}`);
-    } else if (tab === "team-details") {
-      navigate(`/team-details/${userId}`);
-    } else if (tab === "leaderboard") {
-      navigate(`/leaderboard/${userId}`);
-    } else {
-      navigate(`/${tab}`);
-    }
-  };
-
-    const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("loggedInUser");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("username");
-    navigate("/");
-  };
-
-
-
   return (
-    <>
-    {/* Navbar Component */}
-     
-    <div className="container mx-auto p-4 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold text-center mb-6">Players</h1>
+    <div className="min-h-screen bg-gray-50">
+      
 
-      {loading && (
-        <p className="text-center text-gray-500">Loading players...</p>
-      )}
-
-      {error && (
-        <div className="mb-4 p-2 bg-red-100 text-red-700 rounded text-center">
-          {error}
-        </div>
-      )}
-
-      {!loading && !error && players.length === 0 && (
-        <p className="text-center text-gray-500">No players available.</p>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-        {players.map((player) => (
-          <div
-            key={player.Player_ID}
-            className="p-4 bg-white rounded-lg shadow cursor-pointer hover:bg-gray-50"
-            onClick={() => handlePlayerClick(player)}
+      <div className="container mx-auto p-6">
+        <div className="mb-6 flex flex-col md:flex-row gap-4">
+          <input
+            type="text"
+            placeholder="Search by name or university..."
+            className="p-2 border rounded-lg w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <select
+            className="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
           >
-            <p className="font-medium">{player.Name}</p>
-            <p>{player.University}</p>
-            <p className="text-sm text-gray-600">{player.Category}</p>
+            <option value="All">All Categories</option>
+            <option value="Batsman">Batsman</option>
+            <option value="Bowler">Bowler</option>
+            <option value="All-Rounder">All-Rounder</option>
+          </select>
+          <select
+            className="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={sortField}
+            onChange={(e) => setSortField(e.target.value)}
+          >
+            <option value="Name">Sort by Name</option>
+            <option value="Total_Runs">Sort by Runs</option>
+            <option value="Wickets">Sort by Wickets</option>
+            <option value="Innings_Played">Sort by Innings</option>
+          </select>
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+          >
+            {sortOrder === 'asc' ? 'Sort Descending' : 'Sort Ascending'}
+          </button>
+        </div>
+
+        {loading && (
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+            <p className="mt-2 text-gray-600">Loading players...</p>
           </div>
-        ))}
+        )}
+
+        {error && (
+          <div className="mb-6 p-4 bg-red-100 text-red-700 rounded-lg text-center">
+            {error}
+          </div>
+        )}
+
+        {!loading && !error && filteredPlayers.length === 0 && (
+          <p className="text-center text-gray-600">No players found.</p>
+        )}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredPlayers.map((player) => (
+            <div
+              key={player.Player_ID}
+              className="p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
+              onClick={() => handlePlayerClick(player)}
+            >
+              <h3 className="text-xl font-semibold text-gray-800">{player.Name}</h3>
+              <p className="text-gray-600">{player.University}</p>
+              <p className="text-sm text-blue-500">{player.Category}</p>
+              <div className="mt-4 flex justify-between">
+                <span>Runs: {player.Total_Runs}</span>
+                <span>Wickets: {player.Wickets}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {selectedPlayer && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white p-8 rounded-lg shadow-xl max-w-lg w-full">
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">{selectedPlayer.Name}</h2>
+              <div className="space-y-2">
+                <p><strong>University:</strong> {selectedPlayer.University}</p>
+                <p><strong>Category:</strong> {selectedPlayer.Category}</p>
+                <h3 className="text-lg font-semibold mt-4">Statistics</h3>
+                <p><strong>Total Runs:</strong> {selectedPlayer.Total_Runs}</p>
+                <p><strong>Balls Faced:</strong> {selectedPlayer.Balls_Faced}</p>
+                <p><strong>Innings Played:</strong> {selectedPlayer.Innings_Played}</p>
+                <p><strong>Wickets:</strong> {selectedPlayer.Wickets}</p>
+                <p><strong>Overs Bowled:</strong> {selectedPlayer.Overs_Bowled}</p>
+                <p><strong>Runs Conceded:</strong> {selectedPlayer.Runs_Conceded}</p>
+              </div>
+              <button
+                onClick={closeDetailedView}
+                className="mt-6 w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
-      {selectedPlayer && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-            <h2 className="text-2xl font-semibold mb-4">{selectedPlayer.Name}</h2>
-            <p><strong>University:</strong> {selectedPlayer.University}</p>
-            <p><strong>Category:</strong> {selectedPlayer.Category}</p>
-            <h3 className="text-lg font-medium mt-4 mb-2">Statistics</h3>
-            <p><strong>Total Runs:</strong> {selectedPlayer.Total_Runs}</p>
-            <p><strong>Balls Faced:</strong> {selectedPlayer.Balls_Faced}</p>
-            <p><strong>Innings Played:</strong> {selectedPlayer.Innings_Played}</p>
-            <p><strong>Wickets:</strong> {selectedPlayer.Wickets}</p>
-            <p><strong>Overs Bowled:</strong> {selectedPlayer.Overs_Bowled}</p>
-            <p><strong>Runs Conceded:</strong> {selectedPlayer.Runs_Conceded}</p>
-            <button
-              onClick={closeDetailedView}
-              className="mt-4 w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              Close
-            </button>
-          </div>
+      <footer className="bg-gray-800 text-white p-4 mt-8">
+        <div className="container mx-auto text-center">
+          <p>&copy; 2025 Cricket Players Dashboard. All rights reserved.</p>
         </div>
-      )}
+      </footer>
     </div>
-    </>
   );
 };
 

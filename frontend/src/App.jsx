@@ -16,11 +16,14 @@ import TopPerformers from './pages/admin/tournamantSammary/tournamentSammary';
 import TeamDetails from './components/teams/teamDetails';
 import Navbar from './components/Navbar';
 import { Outlet } from 'react-router-dom';
+import LightRaysBackground from './components/LightRaysBackground';
 
 const MainLayout = () => {
   return (
     <>
+     <LightRaysBackground />
       <Navbar />
+      
       <div className="pt-4 px-4">
         <Outlet />
       </div>
