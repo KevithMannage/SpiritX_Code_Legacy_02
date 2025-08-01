@@ -52,7 +52,7 @@ function App() {
       <Routes>
         {/* Public routes without Navbar */}
          <Route element={<DashLayout />}>
-        <Route path="/signup" element={<Signup />} />
+        
         <Route path="/forgetpassword" element={<FogetPassword />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/tournamentSummary" element={<TopPerformers />} />
@@ -74,6 +74,7 @@ function App() {
          
         </Route>
          <Route path="/" element={<Login />} />
+         <Route path="/signup" element={<Signup />} />
       </Routes>
     </Router>
   );
