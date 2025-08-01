@@ -69,23 +69,38 @@
 }*/
 
 .table-header {
-    padding-top: 20px;
-    /* Increased top padding */
+    /* padding: 10px; */
     padding-bottom: 20px;
-    /* Keeps bottom padding */
     text-align: left;
     border-bottom: 1px solid #ddd;
     background: #333;
     color: white;
-    min-height: 60px;
-    /* Ensures a taller header */
+}
+
+
+.table-header-names {
+    padding: 10px;
+    width: 200px;
+    /* Fixed width for 'Name' column */
+    text-align: left;
+}
+
+.table-header-stats {
+    padding-right: 80%;
+    width: 100px;
+    /* Fixed width for 'Runs' and 'Wickets' columns */
+    text-align: right;
+}
+
+.table-contain {
+    padding: 10px;
+    font-size: 20px;
+    font-weight: 650;
+    font-style: italic;
+    color: #bec1c8
 }
 
 /*
-th {
-   
-}
-
 tr:nth-child(even) {
     background: #f9f9f9;
 }

@@ -54,15 +54,15 @@ const TopPerformers = () => {
         <table className="performers-table">
           <thead className="table-header">
             <tr>
-              <th>Name</th>
-              <th>Runs</th>
+              <th className="table-header-names">Name</th>
+              <th className="table-header-stats">Runs</th>
             </tr>
           </thead>
           <tbody>
             {topPerformers.topRunScorers.map((player, index) => (
               <tr key={index}>
-                <td>{player.Name}</td>
-                <td>{player.Total_Runs}</td>
+                <td className="table-contain">{player.Name}</td>
+                <td className="table-contain">{player.Total_Runs}</td>
               </tr>
             ))}
           </tbody>
@@ -74,15 +74,15 @@ const TopPerformers = () => {
         <table className="performers-table">
           <thead className="table-header">
             <tr>
-              <th>Name</th>
-              <th>Wickets</th>
+              <th className="table-header-names">Name</th>
+              <th className="table-header-stats">Wickets</th>
             </tr>
           </thead>
           <tbody>
             {topPerformers.topWicketTakers.map((player, index) => (
               <tr key={index}>
-                <td>{player.Name}</td>
-                <td>{player.Wickets}</td>
+                <td className="table-contain">{player.Name}</td>
+                <td className="table-contain">{player.Wickets}</td>
               </tr>
             ))}
           </tbody>
@@ -101,8 +101,8 @@ const TopPerformers = () => {
           <tbody>
             {topPerformers.totalRunsAndWickets.map((stats, index) => (
               <tr key={index}>
-                <td>{stats.TotalRuns}</td>
-                <td>{stats.TotalWickets}</td>
+                <td className="table-contain">{stats.TotalRuns}</td>
+                <td className="table-contain">{stats.TotalWickets}</td>
               </tr>
             ))}
           </tbody>
