@@ -66,18 +66,24 @@
 /* h2 {
     color: #333;
     margin-bottom: 15px;
-}
+}*/
 
-th,
-td {
-    padding: 10px;
+.table-header {
+    padding-top: 20px;
+    /* Increased top padding */
+    padding-bottom: 20px;
+    /* Keeps bottom padding */
     text-align: left;
     border-bottom: 1px solid #ddd;
-}
-
-th {
     background: #333;
     color: white;
+    min-height: 60px;
+    /* Ensures a taller header */
+}
+
+/*
+th {
+   
 }
 
 tr:nth-child(even) {

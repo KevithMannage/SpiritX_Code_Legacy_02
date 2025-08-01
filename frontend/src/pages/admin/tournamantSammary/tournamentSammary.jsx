@@ -52,7 +52,7 @@ const TopPerformers = () => {
       <div className="performers-section">
         <h2 className="section-title">Top Run Scorer</h2>
         <table className="performers-table">
-          <thead>
+          <thead className="table-header">
             <tr>
               <th>Name</th>
               <th>Runs</th>
@@ -72,7 +72,7 @@ const TopPerformers = () => {
       <div className="performers-section">
         <h2 className="section-title">Top Wicket Taker</h2>
         <table className="performers-table">
-          <thead>
+          <thead className="table-header">
             <tr>
               <th>Name</th>
               <th>Wickets</th>
@@ -92,7 +92,7 @@ const TopPerformers = () => {
       <div className="performers-section">
         <h2 className="section-title">Overall Stats</h2>
         <table className="performers-table">
-          <thead>
+          <thead className="table-header">
             <tr>
               <th>Total Runs</th>
               <th>Total Wickets</th>
