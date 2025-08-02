@@ -1,8 +1,32 @@
-go to SQL_Agent folder and open CMD then,
+# SQL_Agent
 
-1)create virtual environment
+## 🛠️ Setup Instructions
+
+Follow the steps below to set up and run the project.
+
+### 1. Open Command Prompt in the Project Folder
+
+Navigate to the `SQL_Agent` folder and open Command Prompt (CMD) there.
+
+---
+
+### 2. Create a Virtual Environment
+
+````bash
 python -m venv venv
-2)activate environment
-venv\Scripts\activate 3) install packages
-pip install flask flask-cors python-dotenv google-generativeai mysql-connector-python 4) execute backend.py file
+
+### 3. Activate Virtual Environment
+
+```bash
+venv\Scripts\activate
+
+### 4. install Python packages
+
+```bash
+pip install -r requirements.txt
+
+### 5. Execute backend.py file
+
+```bash
 python backend.py
+````
