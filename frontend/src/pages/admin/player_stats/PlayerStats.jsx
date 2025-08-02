@@ -82,31 +82,35 @@ const PlayerStats = () => {
 
   return (
     <div className="w-full p-10 ">
-      <h2 className="text-4xl font-bold  mb-4 pb-5 pl-10 text-blue-400 !text-blue-400 drop-shadow-md [text-shadow:_1px_1px_2px_black]">
+      <h2 className="text-4xl font-bold  mb-4 pb-5 pl-10 text-blue-400 drop-shadow-md [text-shadow:_1px_1px_2px_black]">
         Admin Player Stats View
       </h2>
 
       {/* Players Stats Table */}
       <div className="overflow-x-auto ml-20 mr-20 bg-gray-800">
-        <table className="min-w-full border-collapse">
+        <table className="min-w-full border border-gray-300 border-separate rounded-lg overflow-hidden">
           <thead>
             <tr className="!bg-gray-400 sticky top-0">
-              <th className="border p-2 text-left">ID</th>
-              <th className="border p-2 text-left">Name</th>
-              <th className="border p-2 text-left">University</th>
-              <th className="border p-2 text-left">Category</th>
-              <th className="border p-2 text-right">Total Runs</th>
-              <th className="border p-2 text-right">Balls Faced</th>
-              <th className="border p-2 text-right">Innings Played</th>
-              <th className="border p-2 text-right">Wickets</th>
-              <th className="border p-2 text-right">Overs Bowled</th>
-              <th className="border p-2 text-right">Runs Conceded</th>
-              <th className="border p-2 text-right">Batting Strike Rate</th>
-              <th className="border p-2 text-right">Batting Average</th>
-              <th className="border p-2 text-right">Bowling Strike Rate</th>
-              <th className="border p-2 text-right">Economy Rate</th>
-              <th className="border p-2 text-right">Points</th>
-              <th className="border p-2 text-right">Value (Rs)</th>
+              <th className="border p-2  text-left">ID</th>
+              <th className="border p-4 pr-50 text-left">Name</th>
+              <th className="border p-4 pr-80 text-left">University</th>
+              <th className="border p-4 pr-15 text-left">Category</th>
+              <th className="border p-4 pr-15 text-left">Total Runs</th>
+              <th className="border p-4 pr-15 text-left">Balls Faced</th>
+              <th className="border p-4 pr-15 text-left">Innings Played</th>
+              <th className="border p-4 pr-15 text-left">Wickets</th>
+              <th className="border p-4 pr-15 text-left">Overs Bowled</th>
+              <th className="border p-4 pr-15 text-left">Runs Conceded</th>
+              <th className="border p-4 pr-15 text-left">
+                Batting Strike Rate
+              </th>
+              <th className="border p-4 pr-15 text-left">Batting Average</th>
+              <th className="border p-4 pr-15 text-left">
+                Bowling Strike Rate
+              </th>
+              <th className="border p-4 pr-15 text-left">Economy Rate</th>
+              <th className="border p-4 pr-15 text-left">Points</th>
+              <th className="border p-4 pr-15 text-left">Value (Rs)</th>
             </tr>
           </thead>
           <tbody>
@@ -120,40 +124,40 @@ const PlayerStats = () => {
                   } ${
                     index % 2 === 0
                       ? "bg-transparent text-1xl text-blue-100"
-                      : "bg-gray-700 !bg-gray-700 text-blue-200"
+                      : "bg-gray-700 text-blue-200"
                   }`}
                   onClick={() => handlePlayerClick(player)}
                 >
-                  <td className="border p-2 text-left">{player.Player_ID}</td>
-                  <td className="border p-2 text-left">{player.Name}</td>
-                  <td className="border p-2 text-left">{player.University}</td>
-                  <td className="border p-2 text-left">{player.Category}</td>
-                  <td className="border p-2 text-right">{player.Total_Runs}</td>
-                  <td className="border p-2 text-right">
+                  <td className="border p-4 text-left">{player.Player_ID}</td>
+                  <td className="border p-4 text-left">{player.Name}</td>
+                  <td className="border p-4 text-left">{player.University}</td>
+                  <td className="border p-4 text-left">{player.Category}</td>
+                  <td className="border p-4 text-right">{player.Total_Runs}</td>
+                  <td className="border p-4 text-right">
                     {player.Balls_Faced}
                   </td>
-                  <td className="border p-2 text-right">
+                  <td className="border p-4 text-right">
                     {player.Innings_Played}
                   </td>
-                  <td className="border p-2 text-right">{player.Wickets}</td>
-                  <td className="border p-2 text-right">
+                  <td className="border p-4 text-right">{player.Wickets}</td>
+                  <td className="border p-4 text-right">
                     {player.Overs_Bowled}
                   </td>
-                  <td className="border p-2 text-right">
+                  <td className="border p-4 text-right">
                     {player.Runs_Conceded}
                   </td>
-                  <td className="border p-2 text-right">
+                  <td className="border p-4 text-right">
                     {stats.battingStrikeRate}
                   </td>
-                  <td className="border p-2 text-right">
+                  <td className="border p-4 text-right">
                     {stats.battingAverage}
                   </td>
-                  <td className="border p-2 text-right">
+                  <td className="border p-4 text-right">
                     {stats.bowlingStrikeRate}
                   </td>
-                  <td className="border p-2 text-right">{stats.economyRate}</td>
-                  <td className="border p-2 text-right">{stats.points}</td>
-                  <td className="border p-2 text-right">{stats.value}</td>
+                  <td className="border p-4 text-right">{stats.economyRate}</td>
+                  <td className="border p-4 text-right">{stats.points}</td>
+                  <td className="border p-4 text-right">{stats.value}</td>
                 </tr>
               );
             })}

@@ -1,16 +1,19 @@
 // src/components/TopPerformers.js
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import io from 'socket.io-client';
-import './tournamentSammary.css'
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import io from "socket.io-client";
+import "./tournamentSammary.css";
+import topRunScore from "../../../assets/topRunScore.webp";
+import topWicketTakers from "../../../assets/topWicket.png";
+import overallStats from "../../../assets/overall.webp";
 
-const socket = io('http://localhost:5000'); // Connect to your server
+const socket = io("http://localhost:5000"); // Connect to your server
 
 const TopPerformers = () => {
   const [topPerformers, setTopPerformers] = useState({
     topRunScorers: [],
     topWicketTakers: [],
-    totalRunsAndWickets: []
+    totalRunsAndWickets: [],
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -19,11 +22,13 @@ const TopPerformers = () => {
     // Initial fetch
     const fetchTopPerformers = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/players/top');
+        const response = await axios.get(
+          "http://localhost:5000/api/players/top"
+        );
         setTopPerformers(response.data.data);
         setLoading(false);
       } catch (err) {
-        setError('Failed to fetch top performers');
+        setError("Failed to fetch top performers");
         setLoading(false);
       }
     };
@@ -31,13 +36,13 @@ const TopPerformers = () => {
     fetchTopPerformers();
 
     // Socket.IO listener
-    socket.on('topPerformersUpdated', (data) => {
+    socket.on("topPerformersUpdated", (data) => {
       setTopPerformers(data);
     });
 
     // Cleanup
     return () => {
-      socket.off('topPerformersUpdated');
+      socket.off("topPerformersUpdated");
     };
   }, []);
 
@@ -46,50 +51,77 @@ const TopPerformers = () => {
 
   return (
     <div className="top-performers-container">
-      <div className="performers-section">
-        <h2>Top Run Scorer</h2>
-        <table>
-          <thead>
+      <h1 className=" top-performers-title">Top Performers</h1>
+      <div
+        className="performers-section"
+        style={{
+          backgroundImage: `url(${topRunScore})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center -50px",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        <h2 className="section-title">Top Run Scorer</h2>
+        <table className="performers-table">
+          <thead className="table-header">
             <tr>
-              <th>Name</th>
-              <th>Runs</th>
+              <th className="table-header-names">Name</th>
+              <th className="table-header-stats">Runs</th>
             </tr>
           </thead>
           <tbody>
             {topPerformers.topRunScorers.map((player, index) => (
               <tr key={index}>
-                <td>{player.Name}</td>
-                <td>{player.Total_Runs}</td>
+                <td className="table-contain">{player.Name}</td>
+                <td className="table-contain">{player.Total_Runs}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      <div className="performers-section">
-        <h2>Top Wicket Taker</h2>
-        <table>
-          <thead>
+      <div
+        className="performers-section"
+        style={{
+          backgroundImage: `url(${topWicketTakers})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center -50px",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        <h2 className="section-title">Top Wicket Taker</h2>
+        <table className="performers-table">
+          <thead className="table-header">
             <tr>
-              <th>Name</th>
-              <th>Wickets</th>
+              <th className="table-header-names">Name</th>
+              <th className="table-header-stats">Wickets</th>
             </tr>
           </thead>
           <tbody>
             {topPerformers.topWicketTakers.map((player, index) => (
               <tr key={index}>
-                <td>{player.Name}</td>
-                <td>{player.Wickets}</td>
+                <td className="table-contain">{player.Name}</td>
+                <td className="table-contain">{player.Wickets}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      <div className="performers-section">
-        <h2>Overall Stats</h2>
-        <table>
-          <thead>
+      <div
+        className="performers-section"
+        id="overAll"
+        style={{
+          backgroundImage: `url(${overallStats})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center -60px",
+          backgroundRepeat: "no-repeat",
+          // filter: "brightness(150%)",
+        }}
+      >
+        <h2 className="section-title">Overall Stats</h2>
+        <table className="performers-table">
+          <thead className="table-header">
             <tr>
               <th>Total Runs</th>
               <th>Total Wickets</th>
@@ -98,8 +130,8 @@ const TopPerformers = () => {
           <tbody>
             {topPerformers.totalRunsAndWickets.map((stats, index) => (
               <tr key={index}>
-                <td>{stats.TotalRuns}</td>
-                <td>{stats.TotalWickets}</td>
+                <td className="table-contain">{stats.TotalRuns}</td>
+                <td className="table-contain">{stats.TotalWickets}</td>
               </tr>
             ))}
           </tbody>
