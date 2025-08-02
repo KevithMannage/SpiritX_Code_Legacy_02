@@ -46,6 +46,15 @@
     /* Add scrollbar if content exceeds height */
 }
 
+/* #run-scorer {
+    background-image: url("../../../assets/topRunScore.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+} */
+
+
 .section-title {
     color: #bec1c8;
     margin-bottom: 15px;

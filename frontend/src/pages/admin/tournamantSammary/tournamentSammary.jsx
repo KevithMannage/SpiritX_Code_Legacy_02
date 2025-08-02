@@ -3,6 +3,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import io from "socket.io-client";
 import "./tournamentSammary.css";
+import topRunScore from "../../../assets/topRunScore.webp";
+import topWicketTakers from "../../../assets/topWicket.png";
+import overallStats from "../../../assets/overall.webp";
 
 const socket = io("http://localhost:5000"); // Connect to your server
 
@@ -49,7 +52,16 @@ const TopPerformers = () => {
   return (
     <div className="top-performers-container">
       <h1 className=" top-performers-title">Top Performers</h1>
-      <div className="performers-section">
+      <div
+        className="performers-section"
+        id="run-scorer"
+        style={{
+          backgroundImage: `url(${topRunScore})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center -50px",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
         <h2 className="section-title">Top Run Scorer</h2>
         <table className="performers-table">
           <thead className="table-header">
@@ -69,7 +81,16 @@ const TopPerformers = () => {
         </table>
       </div>
 
-      <div className="performers-section">
+      <div
+        className="performers-section"
+        id="run-scorer"
+        style={{
+          backgroundImage: `url(${topWicketTakers})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center -50px",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
         <h2 className="section-title">Top Wicket Taker</h2>
         <table className="performers-table">
           <thead className="table-header">
@@ -89,7 +110,16 @@ const TopPerformers = () => {
         </table>
       </div>
 
-      <div className="performers-section">
+      <div
+        className="performers-section"
+        id="run-scorer"
+        style={{
+          backgroundImage: `url(${overallStats})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center -200px",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
         <h2 className="section-title">Overall Stats</h2>
         <table className="performers-table">
           <thead className="table-header">
