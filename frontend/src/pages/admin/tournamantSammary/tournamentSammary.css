@@ -46,22 +46,28 @@
     /* Add scrollbar if content exceeds height */
 }
 
-/* #run-scorer {
-    background-image: url("../../../assets/topRunScore.webp");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    position: relative;
-} */
+
+
 
 
 .section-title {
-    color: #bec1c8;
+    color: #302e33;
     margin-bottom: 15px;
-    font-size: 1.5rem;
+    font-size: 2rem;
     /* equivalent to text-2xl */
     font-weight: bold;
+    text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
 }
+
+.overAllTitle {
+    color: #0c0c0c;
+    margin-bottom: 15px;
+    font-size: 2rem;
+    /* equivalent to text-2xl */
+    font-weight: bold;
+    text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+}
+
 
 /* Adjust table to fit within the section */
 .performers-table {
@@ -78,14 +84,22 @@
 }*/
 
 .table-header {
-    /* padding: 10px; */
     padding-bottom: 20px;
     text-align: left;
     border-bottom: 1px solid #ddd;
-    background: #333;
+    background: rgba(51, 51, 51, 0.7);
+    /* Semi-transparent dark gray */
     color: white;
 }
 
+.overAllHeader {
+    padding-bottom: 0px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    background: rgba(51, 51, 51, 0.7);
+    /* Semi-transparent dark gray */
+    color: white;
+}
 
 .table-header-names {
     padding: 10px;
@@ -103,10 +117,16 @@
 
 .table-contain {
     padding: 10px;
-    font-size: 20px;
-    font-weight: 650;
+    /* font-size: 20px; */
+    /* font-weight: 900; */
     font-style: italic;
-    color: #bec1c8
+    color: #162037;
+
+    /* margin-bottom: 15px; */
+    font-size: 1.5rem;
+    /* equivalent to text-2xl */
+    font-weight: bold;
+    text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
 }
 
 /*

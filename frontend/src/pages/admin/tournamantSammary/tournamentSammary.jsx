@@ -54,7 +54,6 @@ const TopPerformers = () => {
       <h1 className=" top-performers-title">Top Performers</h1>
       <div
         className="performers-section"
-        id="run-scorer"
         style={{
           backgroundImage: `url(${topRunScore})`,
           backgroundSize: "cover",
@@ -83,7 +82,6 @@ const TopPerformers = () => {
 
       <div
         className="performers-section"
-        id="run-scorer"
         style={{
           backgroundImage: `url(${topWicketTakers})`,
           backgroundSize: "cover",
@@ -112,12 +110,13 @@ const TopPerformers = () => {
 
       <div
         className="performers-section"
-        id="run-scorer"
+        id="overAll"
         style={{
           backgroundImage: `url(${overallStats})`,
           backgroundSize: "cover",
-          backgroundPosition: "center -200px",
+          backgroundPosition: "center -60px",
           backgroundRepeat: "no-repeat",
+          // filter: "brightness(150%)",
         }}
       >
         <h2 className="section-title">Overall Stats</h2>
